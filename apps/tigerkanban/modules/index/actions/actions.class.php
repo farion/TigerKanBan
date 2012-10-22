@@ -44,4 +44,8 @@ class indexActions extends sfActions
 
         throw new sfException("Invalid Form");
     }
+
+    public function executeGetTasksJson(sfWebRequest $request){
+
+    }
 }
