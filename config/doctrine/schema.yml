@@ -1,0 +1,23 @@
+tkArea:
+  columns:
+    name: string(255)
+    pos: integer
+
+tkTask:
+  columns:
+    title: string(255)
+    link: string(255)
+    area_id: integer
+    sf_guard_user_id: integer(4)
+    effort: float
+  relations:
+    area:
+      class: tkArea
+      local: area_id
+      foreign: id
+      type: one
+    user:
+      class: sfGuardUser
+      local: sf_guard_user_id
+      foreign: id
+      type: one

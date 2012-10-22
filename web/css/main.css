@@ -1,0 +1,99 @@
+/*!
+ * jQuery UI Selectmenu @VERSION
+ *
+ * Copyright 2012, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Selectmenu#theming
+ */
+
+.ui-selectmenu-menu { padding: 0; margin: 0; position:absolute; top: 0; display: none;}
+.ui-selectmenu-menu  ul.ui-menu { overflow: auto; overflow-y: auto ; overflow-x: hidden; }
+.ui-selectmenu-menu .ui-menu .ui-menu-item a { padding: 0.3em 1em 0.3em 1em; }
+.ui-selectmenu-menu .ui-menu li.ui-selectmenu-optgroup { font-size: 1em; font-weight: bold; line-height: 1.5; padding: 2px 0.4em; margin: 0.5em 0 0 0; height: auto; border: 0; }
+.ui-selectmenu-open { display: block; }
+.ui-selectmenu-button a.ui-button { display: inline-block; overflow: hidden; position: relative; text-decoration: none; margin-bottom: 12px; }
+.ui-selectmenu-button span.ui-icon { right: 0.5em; left: auto;  margin-top: -8px; position: absolute; top: 50%; }
+.ui-selectmenu-button span.ui-selectmenu-text { text-align: left; padding: 0.4em 2.1em 0.4em 1em; display: block; line-height: 1.4; }
+
+* {
+    padding: 0px;
+    margin: 0px;
+}
+
+body {
+    font-size: 70.5%;
+    padding: 20px;
+    font-family: Verdana, sans-serif;
+    background: #fff;
+    color: #666;
+}
+
+h1 {
+    font-size: 20px;
+    margin-bottom: 10px;
+
+}
+
+#loginbox {
+    padding: 10px;
+    width: 230px;
+    margin: 0 auto;
+    margin-top: 30px;
+}
+
+#loginbox h1 {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+#loginbox input[type=submit] {
+    margin-top: 15px;
+}
+
+#toolbar {
+    padding: 5px;
+}
+
+.areacol {
+    float: left;
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #ddd;
+    width: 200px;
+}
+
+.areacoltitle {
+    font-weight: bold;
+}
+
+label, input[type=text], input[type=password] {
+    display: block;
+}
+
+input.text {
+    margin-bottom: 12px;
+    width: 95%;
+    padding: .4em;
+}
+
+fieldset {
+    padding: 0;
+    border: 0;
+    margin-top: 25px;
+}
+
+.ui-dialog .ui-state-error {
+    padding: .3em;
+}
+
+.validateTips {
+    border: 1px solid transparent;
+    padding: 0.3em;
+}
+
+.formhelp {
+    font-style: italic;
+}
