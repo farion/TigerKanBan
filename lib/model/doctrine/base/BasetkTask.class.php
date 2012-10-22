@@ -68,5 +68,11 @@ abstract class BasetkTask extends sfDoctrineRecord
         $this->hasOne('sfGuardUser as user', array(
              'local' => 'sf_guard_user_id',
              'foreign' => 'id'));
+
+        $nestedset0 = new Doctrine_Template_NestedSet(array(
+             'hasManyRoots' => true,
+             'rootColumnName' => 'root_id',
+             ));
+        $this->actAs($nestedset0);
     }
 }

@@ -21,6 +21,10 @@ abstract class BasetkTaskForm extends BaseFormDoctrine
       'area_id'          => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('area'), 'add_empty' => true)),
       'sf_guard_user_id' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('user'), 'add_empty' => true)),
       'effort'           => new sfWidgetFormInputText(),
+      'root_id'          => new sfWidgetFormInputText(),
+      'lft'              => new sfWidgetFormInputText(),
+      'rgt'              => new sfWidgetFormInputText(),
+      'level'            => new sfWidgetFormInputText(),
     ));
 
     $this->setValidators(array(
@@ -30,6 +34,10 @@ abstract class BasetkTaskForm extends BaseFormDoctrine
       'area_id'          => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('area'), 'required' => false)),
       'sf_guard_user_id' => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('user'), 'required' => false)),
       'effort'           => new sfValidatorNumber(array('required' => false)),
+      'root_id'          => new sfValidatorInteger(array('required' => false)),
+      'lft'              => new sfValidatorInteger(array('required' => false)),
+      'rgt'              => new sfValidatorInteger(array('required' => false)),
+      'level'            => new sfValidatorInteger(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('tk_task[%s]');

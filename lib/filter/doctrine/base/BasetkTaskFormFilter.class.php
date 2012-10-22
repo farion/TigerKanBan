@@ -18,6 +18,10 @@ abstract class BasetkTaskFormFilter extends BaseFormFilterDoctrine
       'area_id'          => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('area'), 'add_empty' => true)),
       'sf_guard_user_id' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('user'), 'add_empty' => true)),
       'effort'           => new sfWidgetFormFilterInput(),
+      'root_id'          => new sfWidgetFormFilterInput(),
+      'lft'              => new sfWidgetFormFilterInput(),
+      'rgt'              => new sfWidgetFormFilterInput(),
+      'level'            => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
@@ -26,6 +30,10 @@ abstract class BasetkTaskFormFilter extends BaseFormFilterDoctrine
       'area_id'          => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('area'), 'column' => 'id')),
       'sf_guard_user_id' => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('user'), 'column' => 'id')),
       'effort'           => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
+      'root_id'          => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'lft'              => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'rgt'              => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'level'            => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
     ));
 
     $this->widgetSchema->setNameFormat('tk_task_filters[%s]');
@@ -51,6 +59,10 @@ abstract class BasetkTaskFormFilter extends BaseFormFilterDoctrine
       'area_id'          => 'ForeignKey',
       'sf_guard_user_id' => 'ForeignKey',
       'effort'           => 'Number',
+      'root_id'          => 'Number',
+      'lft'              => 'Number',
+      'rgt'              => 'Number',
+      'level'            => 'Number',
     );
   }
 }
