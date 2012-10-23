@@ -351,6 +351,7 @@ fieldset {
 .ui-sortable li .comment li {
     margin: 0 0 0 18px;
     min-height: 5px;
+    width: auto;
 }
 
 .ui-sortable li .comment h1 {
