@@ -28,16 +28,23 @@ class indexActions extends sfActions
         return $this->renderText(json_encode($this->areas));
     }
 
-    public function executeAddTaskJson(sfWebRequest $request)
+    public function executeUpdateTaskJson(sfWebRequest $request)
     {
-        $taskform = new tkTaskForm();
-        $taskform->bind($request->getParameter("task"));
+        $values = $request->getParameter("task");
+
+        $task = Doctrine::getTable("tkTask")->find($values['id']);
+
+        $taskform = new tkTaskForm($task);
+        $taskform->bind($values);
 
         if ($taskform->isValid()) {
+
             $taskform->save();
 
-            $root = Doctrine::getTable('tkTask')->findRootByArea(Doctrine::getTable('tkArea')->createQuery()->orderBy('pos ASC')->fetchOne());
-            $taskform->getObject()->getNode()->insertAsLastChildOf($root);
+            if(!$task){
+                $root = Doctrine::getTable('tkTask')->findRootByArea(Doctrine::getTable('tkArea')->createQuery()->orderBy('pos ASC')->fetchOne());
+                $taskform->getObject()->getNode()->insertAsLastChildOf($root);
+            }
 
             $this->getResponse()->setContentType('text/json');
             return $this->renderText('[]');

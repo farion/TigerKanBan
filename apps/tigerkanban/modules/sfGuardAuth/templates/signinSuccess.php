@@ -16,7 +16,7 @@
 </form>
 
 <script>
-    $('input[type=submit]').button().click(function(){
-        $('body').addClass("loading");
-    });
+  $('input[type=submit]').button().click(function(){
+    $('body').addClass("loading");
+  });
 </script>

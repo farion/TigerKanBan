@@ -215,6 +215,7 @@ fieldset {
 
 #loader {
     display: none;
+    z-index: 99999;
 }
 
 .loading #loader {

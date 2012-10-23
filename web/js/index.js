@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
+  var taskdata = [];
+
   function triggerHeartBeat() {
     setTimeout(function() {
       loadTasks();
@@ -26,8 +28,40 @@ $(document).ready(function() {
   function addTask() {
     var tips = $(".validateTips");
     tips.html("Please enter at least a title.");
-    $("#addtask-frm").dialog("open");
+    $("#task-frm").dialog("open");
     $("select").selectmenu();
+  }
+
+  function editTask(task_id) {
+    var task = null;
+    $.each(taskdata, function(index, mytask) {
+      if(mytask.id == task_id) {
+        task = mytask;
+        return false;
+      }
+    });
+    if(!task) {
+      alert("Something went wrong. Sorry!");
+    }
+
+    var id = $('#tk_task_id');
+    var title = $('#tk_task_title');
+    var link = $('#tk_task_link');
+    var effort = $('#tk_task_effort');
+    var user = $('#tk_task_sf_guard_user_id');
+
+    id.val(task.id);
+    title.val(task.title);
+    link.val(task.link);
+    effort.val(task.effort);
+    user.val(task.user ? task.user.id : '');
+
+    var tips = $(".validateTips");
+    tips.html("Please enter at least a title.");
+    $("#task-frm").dialog("open");
+    $("select").selectmenu();
+    $("select").selectmenu('refresh');
+
   }
 
   function moveTask(area_id, task_id, task_pos) {
@@ -56,6 +90,9 @@ $(document).ready(function() {
     $.ajax({
       url: baseurl + 'index/getTasksJson',
       success: function(data, textStatus, jqxhr) {
+
+        taskdata = data;
+
         $.each(data, function(index, task) {
           $('#areacol_' + task.area_id + ' ul').append('<li class="ui-state-default" id="task_' + task.id + '">' +
             '<div class="text">' + task.title +
@@ -90,28 +127,33 @@ $(document).ready(function() {
 
         $('.tasklist a, .tasklist button').tooltip(getTooltipOptions());
 
+        $('.tasklist li').dblclick(function(event) {
+          editTask($(this).attr('id').substr(5));
+        });
+
         $('.tasklist button').button({
           icons: {
             primary: "ui-icon-pencil"
           },
           text: false
         }).click(function(event) {
-            alert("not implemented yet");
+            editTask($(this).parent().attr('id').substr(5));
             event.preventDefault();
           });
       }
     });
   }
 
-  $("#addtask-frm").dialog({
+  $("#task-frm").dialog({
     autoOpen: false,
     height: 370,
     width: 500,
     modal: true,
     buttons: {
-      "Add Task": function() {
+      "Save": function() {
         var me = this;
         var bValid = true;
+        var id = $('#tk_task_id');
         var title = $('#tk_task_title');
         var link = $('#tk_task_link');
         var effort = $('#tk_task_effort');
@@ -134,13 +176,12 @@ $(document).ready(function() {
          bValid = bValid && checkRegexp(password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9");
          */
         if(bValid) {
-
           $.ajax({
-            url: baseurl + 'index/addTaskJson',
+            url: baseurl + 'index/updateTaskJson',
             type: 'POST',
             data: {
               task: {
-                _csrf_token: csrftoken.val(),
+                id: id.val(),
                 title: title.val(),
                 link: link.val(),
                 effort: effort.val(),
@@ -148,8 +189,8 @@ $(document).ready(function() {
               }
             },
             success: function() {
-              loadTasks();
               $(me).dialog("close");
+              loadTasks();
             },
             error: function() {
               alert("Something went wrong. Sorry!");

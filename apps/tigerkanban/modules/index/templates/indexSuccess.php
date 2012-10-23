@@ -1,4 +1,4 @@
-<div id="addtask-frm" title="Add New Task">
+<div id="task-frm" title="Add New Task">
     <form>
         <fieldset>
             <?php echo $taskform->renderHiddenFields(); ?>
@@ -7,6 +7,7 @@
     </form>
     <p class="validateTips"></p>
 </div>
+
 
 <div id="dialog-signout" title="Signout?">
     Do you really want to signout?
