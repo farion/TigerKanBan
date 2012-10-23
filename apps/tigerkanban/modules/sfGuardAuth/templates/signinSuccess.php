@@ -1,7 +1,7 @@
 <?php use_helper('I18N') ?>
 
 <form action="<?php echo url_for('@sf_guard_signin') ?>" method="post" id="loginbox">
-    <h1>TigerKanBan</h1>
+    <h2>Login</h2>
 
         <?php echo $form->renderGlobalErrors(); ?>
         <?php echo $form->renderHiddenFields(); ?>
@@ -16,5 +16,7 @@
 </form>
 
 <script>
-    $('input[type=submit]').button();
+    $('input[type=submit]').button().click(function(){
+        $('body').addClass("loading");
+    });
 </script>

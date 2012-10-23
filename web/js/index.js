@@ -1,26 +1,105 @@
 $(document).ready(function() {
 
+  function getTooltipOptions() {
+    return {
+      delay: 0,
+      show: {
+        duration: 10
+      },
+      hide: {
+        duration: 10
+      }
+    }
+  }
+
+  function signout() {
+    $("#dialog-signout").dialog("open");
+  }
+
   function addTask() {
     var tips = $(".validateTips");
     tips.html("Please enter at least a title.");
     $("#addtask-frm").dialog("open");
+    $("select").selectmenu();
   }
 
+  function moveTask(area_id, task_id, task_pos) {
+
+    $.ajax({
+      url: baseurl + 'index/moveTaskJson',
+      method: 'POST',
+      data: {
+        area_id: area_id,
+        task_id: task_id,
+        task_pos: task_pos
+      },
+      success: function() {
+        loadTasks();
+      },
+      error: function() {
+        alert("Something went wrong. Sorry!");
+      }
+    });
+
+  }
 
   function loadTasks() {
-    /*
-     $.ajax({
-     url: baseurl + 'index/getTasksJson',
-     success: function(data, textStatus, jqxhr) {
-     //TODO
-     }
-     });
-     */
+
+    //TODO jquery sortable cleanup?
+
+    //cleanup
+    $('.tasklist').html('');
+
+    $.ajax({
+      url: baseurl + 'index/getTasksJson',
+      success: function(data, textStatus, jqxhr) {
+        $.each(data, function(index, task) {
+          $('#areacol_' + task.area_id + ' ul').append('<li class="ui-state-default" id="task_' + task.id + '">' +
+            '<div class="text">' + task.title +
+            (task.link ? ' <a href="' + task.link + '" target="_blank" title="' + task.link + '">Link</a>' : '') +
+            (task.username ? '<span class="user">Assigned to: <strong>' + task.username + '</strong></span>' : '') +
+            '</div>' +
+            '<button>Edit</button>' +
+            '</li>');
+        });
+
+        $('.tasklist').sortable({
+          connectWith: ".tasklist",
+          stop: function(event, ui) {
+            var task = $(ui.item[0]);
+            var task_id = task.attr('id').substr(5);
+            var area_id = task.parent().parent().attr('id').substr(8);
+            var task_pos = task.index();
+
+            moveTask(area_id, task_id, task_pos);
+
+          }
+        }).disableSelection();
+
+        var height = 0;
+        $('.tasklist').each(function() {
+          $(this).height('auto');
+          var myheight = $(this).height();
+          if(myheight > height) {
+            height = myheight;
+          }
+        });
+        $('.tasklist').height(height+60);
+
+        $('.tasklist a, .tasklist button').tooltip(getTooltipOptions());
+
+        $('.tasklist button').button({
+          icons: {
+            primary: "ui-icon-pencil"
+          },
+          text: false
+        }).click(function(event) {
+            alert("not implemented yet");
+            event.preventDefault();
+          });
+      }
+    });
   }
-
-  $("input[type=text], input[type=password]").addClass("text ui-widget-content ui-corner-all");
-  $("select").selectmenu();
-
 
   $("#addtask-frm").dialog({
     autoOpen: false,
@@ -67,6 +146,7 @@ $(document).ready(function() {
               }
             },
             success: function() {
+              loadTasks();
               $(me).dialog("close");
             },
             error: function() {
@@ -86,29 +166,79 @@ $(document).ready(function() {
     }
   });
 
+  $("#dialog-signout").dialog({
+    autoOpen: false,
+    resizable: false,
+    height: 140,
+    modal: true,
+    buttons: {
+      "Signout": function() {
+        $('body').addClass("loading");
+        $(this).dialog("close");
+        document.location.href = baseurl + 'logout';
+      },
+      Cancel: function() {
+
+      }
+    }
+  });
+
+  $("#signout-btn").button().click(function(event) {
+    signout();
+    event.preventDefault();
+  });
+
+  $("#loading-overlay").dialog({
+    height: 140,
+    modal: true
+  });
+
+  $("body").on({
+    ajaxStart: function() {
+      $(this).addClass("loading");
+    },
+    ajaxStop: function() {
+      $(this).removeClass("loading");
+    }
+  });
+
+  $("input[type=text], input[type=password]").addClass("text ui-widget-content ui-corner-all");
 
   $.ajax({
     url: baseurl + 'index/getAreasJson',
     success: function(data, textStatus, jqxhr) {
 
       $.each(data, function(index, elem) {
-        $('#main').append('<div class="areacol"><div class="areacoltitle">' + elem.name + '</div></div>');
+        $('#main').append('<div class="areacol" id="areacol_' + elem.id + '"><div class="areacoltitle">' + elem.name + '</div><ul class="tasklist"></ul></div>');
       });
 
       $('#main').width(data.length * $('.areacol').first().outerWidth(true));
 
       $("#addtask-btn").button({
         icons: {
-          primary: "ui-icon-circle-plus"
+          primary: "ui-icon-plusthick"
         },
         text: false
       }).click(function(event) {
           addTask();
           event.preventDefault();
-      });
+        });
 
+      $("#refresh-btn").button({
+        icons: {
+          primary: "ui-icon-arrowrefresh-1-s"
+        },
+        text: false
+      }).click(function(event) {
+          loadTasks();
+          event.preventDefault();
+        });
+
+      $('button').tooltip(getTooltipOptions());
 
       loadTasks();
+
+
     },
     error: function() {
       alert("Something went wrong. Sorry!");

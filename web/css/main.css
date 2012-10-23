@@ -8,14 +8,62 @@
  * http://docs.jquery.com/UI/Selectmenu#theming
  */
 
-.ui-selectmenu-menu { padding: 0; margin: 0; position:absolute; top: 0; display: none;}
-.ui-selectmenu-menu  ul.ui-menu { overflow: auto; overflow-y: auto ; overflow-x: hidden; }
-.ui-selectmenu-menu .ui-menu .ui-menu-item a { padding: 0.3em 1em 0.3em 1em; }
-.ui-selectmenu-menu .ui-menu li.ui-selectmenu-optgroup { font-size: 1em; font-weight: bold; line-height: 1.5; padding: 2px 0.4em; margin: 0.5em 0 0 0; height: auto; border: 0; }
-.ui-selectmenu-open { display: block; }
-.ui-selectmenu-button a.ui-button { display: inline-block; overflow: hidden; position: relative; text-decoration: none; margin-bottom: 12px; }
-.ui-selectmenu-button span.ui-icon { right: 0.5em; left: auto;  margin-top: -8px; position: absolute; top: 50%; }
-.ui-selectmenu-button span.ui-selectmenu-text { text-align: left; padding: 0.4em 2.1em 0.4em 1em; display: block; line-height: 1.4; }
+.ui-selectmenu-menu {
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    top: 0;
+    display: none;
+}
+
+.ui-selectmenu-menu  ul.ui-menu {
+    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.ui-selectmenu-menu .ui-menu .ui-menu-item a {
+    padding: 0.3em 1em 0.3em 1em;
+}
+
+.ui-selectmenu-menu .ui-menu li.ui-selectmenu-optgroup {
+    font-size: 1em;
+    font-weight: bold;
+    line-height: 1.5;
+    padding: 2px 0.4em;
+    margin: 0.5em 0 0 0;
+    height: auto;
+    border: 0;
+}
+
+.ui-selectmenu-open {
+    display: block;
+}
+
+.ui-selectmenu-button a.ui-button {
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+    text-decoration: none;
+    margin-bottom: 12px;
+}
+
+.ui-selectmenu-button span.ui-icon {
+    right: 0.5em;
+    left: auto;
+    margin-top: -8px;
+    position: absolute;
+    top: 50%;
+}
+
+.ui-selectmenu-button span.ui-selectmenu-text {
+    text-align: left;
+    padding: 0.4em 2.1em 0.4em 1em;
+    display: block;
+    line-height: 1.4;
+}
+
+/* TigerKanBan */
 
 * {
     padding: 0px;
@@ -24,26 +72,45 @@
 
 body {
     font-size: 70.5%;
-    padding: 20px;
     font-family: Verdana, sans-serif;
-    background: #fff;
+    background: #f5f5f5;
     color: #666;
 }
 
 h1 {
     font-size: 20px;
-    margin-bottom: 10px;
+    line-height: 15px;
+    font-weight: normal;
+}
 
+h2 {
+    font-size: 17px;
+    font-weight: normal;
+}
+
+h1 span {
+    font-size: 10px;
+    font-weight: normal;
+    font-style: italic;
+}
+
+li.ui-state-default a,
+li.ui-state-default a:visited,
+li.ui-state-default a:link,
+a {
+    color: #0073EA;
+    text-decoration: underline;
 }
 
 #loginbox {
     padding: 10px;
     width: 230px;
     margin: 0 auto;
-    margin-top: 30px;
+    margin-top: 10px;
+    margin-bottom: 50px;
 }
 
-#loginbox h1 {
+#loginbox h2 {
     width: 100%;
     text-align: center;
     margin-bottom: 30px;
@@ -57,12 +124,22 @@ h1 {
     padding: 5px;
 }
 
+#profilebar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
 .areacol {
     float: left;
     padding: 10px;
     margin: 5px;
     border: 1px solid #ddd;
     width: 200px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -khtml-border-radius: 2px;
+    border-radius: 2px;
 }
 
 .areacoltitle {
@@ -94,6 +171,93 @@ fieldset {
     padding: 0.3em;
 }
 
-.formhelp {
-    font-style: italic;
+.ui-sortable {
+    margin: 10px 0;
+    list-style-type: none;
+    float: left;
+    width: 180px;
+}
+
+.ui-sortable li {
+    margin: 0 5px 5px 0;
+    padding: 5px;
+    width: 100%;
+    position: relative;
+    min-height: 28px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -khtml-border-radius: 2px;
+    border-radius: 2px;
+    font-weight: normal;
+    cursor: move;
+}
+
+.ui-sortable li button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.ui-sortable li .user,
+.ui-sortable li .text {
+    width: 130px;
+}
+
+.ui-sortable li .user {
+    font-size: 90%;
+    margin-top: 5px;
+    display: block;
+}
+
+.ui-sortable li.ui-state-default {
+    color: #666;
+}
+
+#loader {
+    display: none;
+}
+
+.loading #loader {
+    display: block;
+}
+
+#loader .indicator {
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-image: url('../images/loader.gif');
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+#header {
+    background-color: #0073EA;
+    color: #fff;
+    height: 50px;
+}
+
+#header h1 {
+    padding: 9px;
+}
+
+#content {
+    padding: 10px 10px 15px 10px;
+    background-color: #fff;
+}
+
+.clearer {
+    clear: both;
+}
+
+#footer a {
+    color: #aaa;
+}
+
+#footer {
+    color: #aaa;
+    text-align: center;
+    border-top: 1px solid #ddd;
+    padding: 15px 10px 10px 10px;
+    display: block;
 }

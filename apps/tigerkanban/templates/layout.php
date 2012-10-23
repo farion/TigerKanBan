@@ -1,15 +1,37 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <?php include_http_metas() ?>
     <?php include_metas() ?>
     <?php include_title() ?>
-    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="shortcut icon" href="/favicon.ico"/>
     <script>var baseurl = "<?php echo url_for('@homepage'); ?>";</script>
     <?php include_stylesheets() ?>
     <?php include_javascripts() ?>
-  </head>
-  <body>
+</head>
+<body>
+<div id="header">
+
+    <h1>TigerKanBan<br><span>Come in and take your tasks</span></h1>
+
+    <?php if ($sf_user->isAuthenticated()): ?>
+    <div id="profilebar">Signed in as <strong><?php echo $sf_user->getGuardUser()->getUsername(); ?></strong>&nbsp;&nbsp;&nbsp;
+        <button id="signout-btn">Signout</button>
+    </div>
+    <?php endif; ?>
+
+</div>
+
+
+<div id="content">
     <?php echo $sf_content ?>
-  </body>
+    <div class="clearer"></div>
+</div>
+
+<div id="footer">TigerKanBan v0.1<br><br>For more information see: <a href="https://github.com/farion/TigerKanBan" target="_blank">https://github.com/farion/TigerKanBan</a>
+</div>
+<div id="loader" class="ui-widget-overlay">
+    <div class="indicator"></div>
+</div>
+</body>
 </html>

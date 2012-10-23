@@ -8,7 +8,12 @@
     <p class="validateTips"></p>
 </div>
 
+<div id="dialog-signout" title="Signout?">
+    Do you really want to signout?
+</div>
 
-<h1>TigerKanBan</h1>
-<div id="toolbar"><button id="addtask-btn">Add Task</button></div>
+<div id="toolbar">
+    <button id="addtask-btn">Add Task</button>
+    <button id="refresh-btn">Refresh</button>
+</div>
 <div id="main"></div>

@@ -17,7 +17,7 @@ class indexActions extends sfActions
      */
     public function executeIndex(sfWebRequest $request)
     {
-      $this->taskform = new tkTaskForm();
+        $this->taskform = new tkTaskForm();
     }
 
     public function executeGetAreasJson(sfWebRequest $request)
@@ -28,24 +28,57 @@ class indexActions extends sfActions
         return $this->renderText(json_encode($this->areas));
     }
 
-    public function executeAddTaskJson(sfWebRequest $request){
-
+    public function executeAddTaskJson(sfWebRequest $request)
+    {
         $taskform = new tkTaskForm();
-
         $taskform->bind($request->getParameter("task"));
 
-        if($taskform->isValid()){
+        if ($taskform->isValid()) {
             $taskform->save();
+
+            $root = Doctrine::getTable('tkTask')->findRootByArea(Doctrine::getTable('tkArea')->createQuery()->orderBy('pos ASC')->fetchOne());
+            $taskform->getObject()->getNode()->insertAsLastChildOf($root);
+
             $this->getResponse()->setContentType('text/json');
             return $this->renderText('[]');
         }
 
-        echo $$taskform->renderGlobalErrors();
-
         throw new sfException("Invalid Form");
     }
 
-    public function executeGetTasksJson(sfWebRequest $request){
+    public function executeGetTasksJson(sfWebRequest $request)
+    {
+        $tasks = Doctrine_Query::create()
+            ->select("t.title, t.effort, t.link, u.username AS username, r.area_id AS area_id")
+            ->from("tkTask t")
+            ->leftJoin("t.root r")
+            ->where("t.level = 1")
+            ->leftJoin("t.user u")
+            ->orderBy("t.lft ASC")
+            ->fetchArray();
 
+
+        $this->getResponse()->setContentType('text/json');
+        return $this->renderText(json_encode($tasks));
+    }
+
+    public function executeMoveTaskJson(sfWebRequest $request)
+    {
+        $this->forward404Unless($area = Doctrine::getTable('tkArea')->find($request->getParameter('area_id')));
+        $this->forward404Unless($root = Doctrine::getTable('tkTask')->findRootByArea($area));
+        $this->forward404Unless($task = Doctrine::getTable('tkTask')->find($request->getParameter('task_id')));
+
+        $pos = $request->getParameter("task_pos") - 1;
+
+        if ($pos <= 0) {
+            $task->getNode()->moveAsFirstChildOf($root);
+        } else {
+            $children = $root->getNode()->getChildren();
+            $this->forward404Unless($prevsib = $children[$pos]);
+            $task->getNode()->moveAsNextSiblingOf($prevsib);
+        }
+
+        $this->getResponse()->setContentType('text/json');
+        return $this->renderText('[]');
     }
 }

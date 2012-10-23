@@ -12,21 +12,27 @@
  * @property float $effort
  * @property tkArea $area
  * @property sfGuardUser $user
+ * @property tkTask $root
+ * @property Doctrine_Collection $tkTask
  * 
- * @method string      getTitle()            Returns the current record's "title" value
- * @method string      getLink()             Returns the current record's "link" value
- * @method integer     getAreaId()           Returns the current record's "area_id" value
- * @method integer     getSfGuardUserId()    Returns the current record's "sf_guard_user_id" value
- * @method float       getEffort()           Returns the current record's "effort" value
- * @method tkArea      getArea()             Returns the current record's "area" value
- * @method sfGuardUser getUser()             Returns the current record's "user" value
- * @method tkTask      setTitle()            Sets the current record's "title" value
- * @method tkTask      setLink()             Sets the current record's "link" value
- * @method tkTask      setAreaId()           Sets the current record's "area_id" value
- * @method tkTask      setSfGuardUserId()    Sets the current record's "sf_guard_user_id" value
- * @method tkTask      setEffort()           Sets the current record's "effort" value
- * @method tkTask      setArea()             Sets the current record's "area" value
- * @method tkTask      setUser()             Sets the current record's "user" value
+ * @method string              getTitle()            Returns the current record's "title" value
+ * @method string              getLink()             Returns the current record's "link" value
+ * @method integer             getAreaId()           Returns the current record's "area_id" value
+ * @method integer             getSfGuardUserId()    Returns the current record's "sf_guard_user_id" value
+ * @method float               getEffort()           Returns the current record's "effort" value
+ * @method tkArea              getArea()             Returns the current record's "area" value
+ * @method sfGuardUser         getUser()             Returns the current record's "user" value
+ * @method tkTask              getRoot()             Returns the current record's "root" value
+ * @method Doctrine_Collection getTkTask()           Returns the current record's "tkTask" collection
+ * @method tkTask              setTitle()            Sets the current record's "title" value
+ * @method tkTask              setLink()             Sets the current record's "link" value
+ * @method tkTask              setAreaId()           Sets the current record's "area_id" value
+ * @method tkTask              setSfGuardUserId()    Sets the current record's "sf_guard_user_id" value
+ * @method tkTask              setEffort()           Sets the current record's "effort" value
+ * @method tkTask              setArea()             Sets the current record's "area" value
+ * @method tkTask              setUser()             Sets the current record's "user" value
+ * @method tkTask              setRoot()             Sets the current record's "root" value
+ * @method tkTask              setTkTask()           Sets the current record's "tkTask" collection
  * 
  * @package    tigerkanban
  * @subpackage model
@@ -68,6 +74,14 @@ abstract class BasetkTask extends sfDoctrineRecord
         $this->hasOne('sfGuardUser as user', array(
              'local' => 'sf_guard_user_id',
              'foreign' => 'id'));
+
+        $this->hasOne('tkTask as root', array(
+             'local' => 'root_id',
+             'foreign' => 'id'));
+
+        $this->hasMany('tkTask', array(
+             'local' => 'id',
+             'foreign' => 'root_id'));
 
         $nestedset0 = new Doctrine_Template_NestedSet(array(
              'hasManyRoots' => true,

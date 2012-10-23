@@ -25,3 +25,8 @@ tkTask:
       local: sf_guard_user_id
       foreign: id
       type: one
+    root:
+      class: tkTask
+      local: root_id
+      foreign: id
+      type: one
