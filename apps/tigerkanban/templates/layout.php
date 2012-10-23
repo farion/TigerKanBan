@@ -12,7 +12,7 @@
 <body>
 <div id="header">
 
-    <?php include_component("index","header"); ?>
+    <?php include_component("whiteboard","header"); ?>
 
 </div>
 

@@ -1,1 +1,0 @@
-<h2>You need at least one group</h2>

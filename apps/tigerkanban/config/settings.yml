@@ -44,4 +44,4 @@ all:
     secure_action:          secure
 
     sf_guard_plugin:
-      success_signin_url:      index/index
+      success_signin_url:      whiteboard/index
