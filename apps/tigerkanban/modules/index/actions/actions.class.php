@@ -17,12 +17,27 @@ class indexActions extends sfActions
      */
     public function executeIndex(sfWebRequest $request)
     {
+
+
+        if(!Doctrine_Query::create()
+            ->from('sfGuardGroup g')
+            ->leftJoin("g.users u")
+            ->where("u.id = ?",sfContext::getInstance()->getUser()->getGuardUser()->getId())
+            ->count()){
+            return "NoGroup";
+        }
+
         $this->taskform = new tkTaskForm();
+
     }
 
     public function executeGetAreasJson(sfWebRequest $request)
     {
-        $this->areas = Doctrine::getTable('tkArea')->createQuery()->orderBy('pos ASC')->fetchArray();
+        $this->areas = Doctrine::getTable('tkArea')
+            ->createQuery()
+            ->where("sf_guard_group_id = ?",$request->getParameter("team_id"))
+            ->orderBy('pos ASC')
+            ->fetchArray();
 
         $this->getResponse()->setContentType('text/json');
         return $this->renderText(json_encode($this->areas));
@@ -42,7 +57,7 @@ class indexActions extends sfActions
             $taskform->save();
 
             if(!$task){
-                $root = Doctrine::getTable('tkTask')->findRootByArea(Doctrine::getTable('tkArea')->createQuery()->orderBy('pos ASC')->fetchOne());
+                $root = Doctrine::getTable('tkTask')->findRootByTeamId($request->getParameter('team_id'));
                 $taskform->getObject()->getNode()->insertAsLastChildOf($root);
             }
 
@@ -55,15 +70,19 @@ class indexActions extends sfActions
 
     public function executeGetTasksJson(sfWebRequest $request)
     {
-        $tasks = Doctrine_Query::create()
+        $q = Doctrine_Query::create()
             ->select("t.title, t.effort, t.link, u.username AS username, r.area_id AS area_id")
             ->from("tkTask t")
             ->leftJoin("t.root r")
             ->where("t.level = 1")
-            ->leftJoin("t.user u")
-            ->orderBy("t.lft ASC")
-            ->fetchArray();
+            ->leftJoin("t.user u");
 
+        if($request->getParameter("filter","all") == "me"){
+            $q->andWhere("u.id = ?",$this->getUser()->getGuardUser()->getId());
+        }
+
+        $tasks = $q->orderBy("t.lft ASC")
+        ->fetchArray();
 
         $this->getResponse()->setContentType('text/json');
         return $this->renderText(json_encode($tasks));

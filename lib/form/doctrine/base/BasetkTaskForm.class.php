@@ -21,10 +21,14 @@ abstract class BasetkTaskForm extends BaseFormDoctrine
       'area_id'          => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('area'), 'add_empty' => true)),
       'sf_guard_user_id' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('user'), 'add_empty' => true)),
       'effort'           => new sfWidgetFormInputText(),
+      'progress'         => new sfWidgetFormInputText(),
+      'archived'         => new sfWidgetFormInputCheckbox(),
       'root_id'          => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('root'), 'add_empty' => true)),
       'lft'              => new sfWidgetFormInputText(),
       'rgt'              => new sfWidgetFormInputText(),
       'level'            => new sfWidgetFormInputText(),
+      'created_at'       => new sfWidgetFormDateTime(),
+      'updated_at'       => new sfWidgetFormDateTime(),
     ));
 
     $this->setValidators(array(
@@ -34,10 +38,14 @@ abstract class BasetkTaskForm extends BaseFormDoctrine
       'area_id'          => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('area'), 'required' => false)),
       'sf_guard_user_id' => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('user'), 'required' => false)),
       'effort'           => new sfValidatorNumber(array('required' => false)),
+      'progress'         => new sfValidatorInteger(array('required' => false)),
+      'archived'         => new sfValidatorBoolean(array('required' => false)),
       'root_id'          => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('root'), 'required' => false)),
       'lft'              => new sfValidatorInteger(array('required' => false)),
       'rgt'              => new sfValidatorInteger(array('required' => false)),
       'level'            => new sfValidatorInteger(array('required' => false)),
+      'created_at'       => new sfValidatorDateTime(),
+      'updated_at'       => new sfValidatorDateTime(),
     ));
 
     $this->widgetSchema->setNameFormat('tk_task[%s]');

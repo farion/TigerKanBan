@@ -1,14 +1,9 @@
 TODO 0.1
 --------
-
-- client side validation
 - assign to me shortcut
-- filter own tasks
 - archive tasks
 - delete tasks
-- show effort on tasks
 - add modified behavior
-- team support
 
 TODO 0.2
 --------
@@ -16,6 +11,7 @@ TODO 0.2
 - add note to tasks
 - bugtracking integration -> url with placeholder for ticket number
 - add an action log
+- move tasks between teams
 
 TODO 0.3
 --------
@@ -23,6 +19,10 @@ TODO 0.3
 - use complete browserwidth
 
 TODO 0.4
+--------
+- secure other teams
+
+TODO 0.5
 --------
 - gui for areamanagement
 - gui for usermanagement

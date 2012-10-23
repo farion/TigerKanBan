@@ -4,7 +4,7 @@ $(document).ready(function() {
 
   function triggerHeartBeat() {
     setTimeout(function() {
-      loadTasks();
+      loadAreas();
       triggerHeartBeat();
     }, 300000); //reload after 5Minutes
   }
@@ -69,12 +69,70 @@ $(document).ready(function() {
       url: baseurl + 'index/moveTaskJson',
       method: 'POST',
       data: {
+        team_id: $('#team_id').val(),
         area_id: area_id,
         task_id: task_id,
         task_pos: task_pos
       },
       success: function() {
+        loadAreas();
+      },
+      error: function() {
+        alert("Something went wrong. Sorry!");
+      }
+    });
+  }
+
+  function updateTips(t) {
+    $(".validateTips")
+      .text(t)
+      .addClass("ui-state-highlight");
+    setTimeout(function() {
+      $(".validateTips").removeClass("ui-state-highlight", 1500);
+    }, 500);
+  }
+
+  function checkLength(o, n, min, max) {
+    if(o.val().length > max || o.val().length < min) {
+      o.addClass("ui-state-error");
+      updateTips("Length of " + n + " must be between " +
+        min + " and " + max + ".");
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  function checkRegexp(o, regexp, n) {
+    if(!( regexp.test(o.val()) )) {
+      o.addClass("ui-state-error");
+      updateTips(n);
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  function loadAreas() {
+    $.ajax({
+      url: baseurl + 'index/getAreasJson',
+      method: 'POST',
+      data: {
+        team_id: $('#team_id').val()
+      },
+      success: function(data, textStatus, jqxhr) {
+
+        $('#main').html("");
+
+        $.each(data, function(index, elem) {
+          $('#main').append('<div class="areacol" id="areacol_' + elem.id + '"><div class="areacoltitle">' + elem.name + '</div><ul class="tasklist"></ul></div>');
+        });
+
+        $('#main').width(data.length * $('.areacol').first().outerWidth(true));
+
         loadTasks();
+
+
       },
       error: function() {
         alert("Something went wrong. Sorry!");
@@ -89,6 +147,11 @@ $(document).ready(function() {
 
     $.ajax({
       url: baseurl + 'index/getTasksJson',
+      method: 'POST',
+      data: {
+        team_id: $('#team_id').val(),
+        filter: $("#filter-radio :radio:checked").attr('value')
+      },
       success: function(data, textStatus, jqxhr) {
 
         taskdata = data;
@@ -98,7 +161,7 @@ $(document).ready(function() {
             '<div class="text"><strong>' + task.title + '</strong>' +
             (task.link ? ' <a href="' + task.link + '" target="_blank" title="' + task.link + '">Link</a>' : '') +
             '<span class="user">' +
-            (task.username ? '@' + task.username + '' :  '@N/A') +
+            (task.username ? '@' + task.username + '' : '@N/A') +
             (task.effort ? ' | ' + task.effort + 'h' : '') +
             '</span></div>' +
             '<button>Edit</button>' +
@@ -165,23 +228,19 @@ $(document).ready(function() {
 
         $('#tk_task_sf_guard_user_id, #tk_task_title, #tk_task_link, #tk_task_effort').removeClass("ui-state-error");
 
-        //TODO
 
-        /*
-         bValid = bValid && checkLength(name, "username", 3, 16);
-         bValid = bValid && checkLength(email, "email", 6, 80);
-         bValid = bValid && checkLength(password, "password", 5, 16);
+        bValid = bValid && checkLength(title, "title", 3, 255);
+        bValid = bValid && checkLength(link, "link", 3, 255);
+        bValid = bValid && checkLength(effort, "effort", 1, 5);
+        bValid = bValid && checkRegexp(link, /^https?:\/\/.*$/i, "Link must be a valid url.");
+        bValid = bValid && checkRegexp(effort, /^[0-9]+\.{0,1}[0-9]*$/i, "Effort must be a float.");
 
-         bValid = bValid && checkRegexp(name, /^[a-z]([0-9a-z_])+$/i, "Username may consist of a-z, 0-9, underscores, begin with a letter.");
-         // From jquery.validate.js (by joern), contributed by Scott Gonzalez: http://projects.scottsplayground.com/email_address_validation/
-         bValid = bValid && checkRegexp(email, /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i, "eg. ui@jquery.com");
-         bValid = bValid && checkRegexp(password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9");
-         */
         if(bValid) {
           $.ajax({
             url: baseurl + 'index/updateTaskJson',
             type: 'POST',
             data: {
+              team_id: $('#team_id').val(),
               task: {
                 id: id.val(),
                 title: title.val(),
@@ -192,7 +251,7 @@ $(document).ready(function() {
             },
             success: function() {
               $(me).dialog("close");
-              loadTasks();
+              loadAreas();
             },
             error: function() {
               alert("Something went wrong. Sorry!");
@@ -248,43 +307,41 @@ $(document).ready(function() {
 
   $("input[type=text], input[type=password]").addClass("text ui-widget-content ui-corner-all");
 
-  $.ajax({
-    url: baseurl + 'index/getAreasJson',
-    success: function(data, textStatus, jqxhr) {
 
-      $.each(data, function(index, elem) {
-        $('#main').append('<div class="areacol" id="areacol_' + elem.id + '"><div class="areacoltitle">' + elem.name + '</div><ul class="tasklist"></ul></div>');
-      });
-
-      $('#main').width(data.length * $('.areacol').first().outerWidth(true));
-
-      $("#addtask-btn").button({
-        icons: {
-          primary: "ui-icon-plusthick"
-        },
-        text: false
-      }).click(function(event) {
-          addTask();
-          event.preventDefault();
-        });
-
-      $("#refresh-btn").button({
-        icons: {
-          primary: "ui-icon-arrowrefresh-1-s"
-        },
-        text: false
-      }).click(function(event) {
-          loadTasks();
-          event.preventDefault();
-        });
-
-      $('button').tooltip(getTooltipOptions());
-
-      loadTasks();
-      triggerHeartBeat();
+  $("#addtask-btn").button({
+    icons: {
+      primary: "ui-icon-plusthick"
     },
-    error: function() {
-      alert("Something went wrong. Sorry!");
+    text: false
+  }).click(function(event) {
+      addTask();
+      event.preventDefault();
+    });
+
+  $("#refresh-btn").button({
+    icons: {
+      primary: "ui-icon-arrowrefresh-1-s"
+    },
+    text: false
+  }).click(function(event) {
+      loadAreas();
+      event.preventDefault();
+    });
+
+  $('button').tooltip(getTooltipOptions());
+
+  $('#filter-radio').buttonset();
+
+  $("#filter-radio :radio").click(function(){
+    loadAreas();
+  });
+
+  $('#team_id').selectmenu({
+    select: function() {
+      loadAreas();
     }
   });
+
+  loadAreas();
+  triggerHeartBeat();
 });

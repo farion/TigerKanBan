@@ -1,9 +1,20 @@
+sfGuardGroup:
+  sfGuardGroup_1:
+    name: ServerTeam
+    description: null
+    created_at: '2012-10-23 13:42:35'
+    updated_at: '2012-10-23 13:42:35'
+  sfGuardGroup_2:
+    name: ClientTeam
+    description: null
+    created_at: '2012-10-23 13:42:48'
+    updated_at: '2012-10-23 13:42:48'
 sfGuardUser:
   sfGuardUser_1:
     username: anton
     algorithm: sha1
     salt: b9ed23da73871ba1d028c7e03840fe92
-    password: d69b5ab284efc89141a6d3411477febaa8eeee43
+    password: 6f0b5b5811936984bcfcb6ca3e6b31f59d117940
     is_active: true
     is_super_admin: false
     last_login: null
@@ -13,7 +24,7 @@ sfGuardUser:
     username: hans
     algorithm: sha1
     salt: 1d051be1706f1ce4a6acd55107eebd38
-    password: dcd92f889d95446003f874cd850283e415abdfb6
+    password: 8e92a7a1384d066966c4f9deb8fdfe666916278b
     is_active: true
     is_super_admin: false
     last_login: null
@@ -23,7 +34,7 @@ sfGuardUser:
     username: peter
     algorithm: sha1
     salt: 600b2c19321c914384368bce0737f272
-    password: 406b31850cb984f5ac716e6929307bef7979677c
+    password: bc3bbe16da001af52c4ef259a77daa19f2e1ace2
     is_active: true
     is_super_admin: false
     last_login: null
@@ -33,7 +44,7 @@ sfGuardUser:
     username: klaus
     algorithm: sha1
     salt: 77a478d9bb503ef07e44b0180f0542bf
-    password: f3c0bd471c75d5c7e3fbbecd84e60c1939f076ff
+    password: 2403bb60a6f16131e516e666650f90c6c9d82eb3
     is_active: true
     is_super_admin: false
     last_login: null
@@ -43,7 +54,7 @@ sfGuardUser:
     username: heiner
     algorithm: sha1
     salt: feb444ce1ad2713181b98e7b0f5ad532
-    password: eedcd329029c1a96faefc662c51b622dc2576ed8
+    password: 88b676c2ca91fcc318c894c061d59d282604ec9d
     is_active: true
     is_super_admin: false
     last_login: null
@@ -53,15 +64,29 @@ tkArea:
   tkArea_1:
     name: Backlog
     pos: '0'
+    team: sfGuardGroup_1
+    created_at: '2012-10-23 13:42:17'
+    updated_at: '2012-10-23 13:42:17'
   tkArea_2:
     name: Specification
     pos: '1'
+    team: sfGuardGroup_1
+    created_at: '2012-10-23 13:42:17'
+    updated_at: '2012-10-23 13:42:17'
   tkArea_3:
     name: Implementation
     pos: '2'
+    team: sfGuardGroup_1
+    created_at: '2012-10-23 13:42:17'
+    updated_at: '2012-10-23 13:42:17'
   tkArea_4:
     name: Test
     pos: '3'
+    team: sfGuardGroup_1
+    created_at: '2012-10-23 13:42:17'
+    updated_at: '2012-10-23 13:42:17'
   tkArea_5:
     name: Ready
     pos: '4'
+    created_at: '2012-10-23 13:42:17'
+    updated_at: '2012-10-23 13:42:17'

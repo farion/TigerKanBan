@@ -7,14 +7,20 @@
  * 
  * @property string $name
  * @property integer $pos
+ * @property integer $sf_guard_group_id
+ * @property sfGuardGroup $team
  * @property Doctrine_Collection $tkTask
  * 
- * @method string              getName()   Returns the current record's "name" value
- * @method integer             getPos()    Returns the current record's "pos" value
- * @method Doctrine_Collection getTkTask() Returns the current record's "tkTask" collection
- * @method tkArea              setName()   Sets the current record's "name" value
- * @method tkArea              setPos()    Sets the current record's "pos" value
- * @method tkArea              setTkTask() Sets the current record's "tkTask" collection
+ * @method string              getName()              Returns the current record's "name" value
+ * @method integer             getPos()               Returns the current record's "pos" value
+ * @method integer             getSfGuardGroupId()    Returns the current record's "sf_guard_group_id" value
+ * @method sfGuardGroup        getTeam()              Returns the current record's "team" value
+ * @method Doctrine_Collection getTkTask()            Returns the current record's "tkTask" collection
+ * @method tkArea              setName()              Sets the current record's "name" value
+ * @method tkArea              setPos()               Sets the current record's "pos" value
+ * @method tkArea              setSfGuardGroupId()    Sets the current record's "sf_guard_group_id" value
+ * @method tkArea              setTeam()              Sets the current record's "team" value
+ * @method tkArea              setTkTask()            Sets the current record's "tkTask" collection
  * 
  * @package    tigerkanban
  * @subpackage model
@@ -33,13 +39,24 @@ abstract class BasetkArea extends sfDoctrineRecord
         $this->hasColumn('pos', 'integer', null, array(
              'type' => 'integer',
              ));
+        $this->hasColumn('sf_guard_group_id', 'integer', 4, array(
+             'type' => 'integer',
+             'length' => 4,
+             ));
     }
 
     public function setUp()
     {
         parent::setUp();
+        $this->hasOne('sfGuardGroup as team', array(
+             'local' => 'sf_guard_group_id',
+             'foreign' => 'id'));
+
         $this->hasMany('tkTask', array(
              'local' => 'id',
              'foreign' => 'area_id'));
+
+        $timestampable0 = new Doctrine_Template_Timestampable();
+        $this->actAs($timestampable0);
     }
 }

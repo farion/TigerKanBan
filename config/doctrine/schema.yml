@@ -1,19 +1,31 @@
 tkArea:
+  actAs:
+    Timestampable: ~
   columns:
     name: string(255)
     pos: integer
+    sf_guard_group_id: integer(4),
+  relations:
+    team:
+      class: sfGuardGroup
+      local: sf_guard_group_id
+      foreign: id
+      type: one
 
 tkTask:
   actAs:
     NestedSet:
       hasManyRoots: true
       rootColumnName: root_id
+    Timestampable: ~
   columns:
     title: string(255)
     link: string(255)
     area_id: integer
     sf_guard_user_id: integer(4)
     effort: float
+    progress: integer
+    archived: boolean
   relations:
     area:
       class: tkArea

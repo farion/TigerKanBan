@@ -10,6 +10,8 @@
  * @property integer $area_id
  * @property integer $sf_guard_user_id
  * @property float $effort
+ * @property integer $progress
+ * @property boolean $archived
  * @property tkArea $area
  * @property sfGuardUser $user
  * @property tkTask $root
@@ -20,6 +22,8 @@
  * @method integer             getAreaId()           Returns the current record's "area_id" value
  * @method integer             getSfGuardUserId()    Returns the current record's "sf_guard_user_id" value
  * @method float               getEffort()           Returns the current record's "effort" value
+ * @method integer             getProgress()         Returns the current record's "progress" value
+ * @method boolean             getArchived()         Returns the current record's "archived" value
  * @method tkArea              getArea()             Returns the current record's "area" value
  * @method sfGuardUser         getUser()             Returns the current record's "user" value
  * @method tkTask              getRoot()             Returns the current record's "root" value
@@ -29,6 +33,8 @@
  * @method tkTask              setAreaId()           Sets the current record's "area_id" value
  * @method tkTask              setSfGuardUserId()    Sets the current record's "sf_guard_user_id" value
  * @method tkTask              setEffort()           Sets the current record's "effort" value
+ * @method tkTask              setProgress()         Sets the current record's "progress" value
+ * @method tkTask              setArchived()         Sets the current record's "archived" value
  * @method tkTask              setArea()             Sets the current record's "area" value
  * @method tkTask              setUser()             Sets the current record's "user" value
  * @method tkTask              setRoot()             Sets the current record's "root" value
@@ -62,6 +68,12 @@ abstract class BasetkTask extends sfDoctrineRecord
         $this->hasColumn('effort', 'float', null, array(
              'type' => 'float',
              ));
+        $this->hasColumn('progress', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('archived', 'boolean', null, array(
+             'type' => 'boolean',
+             ));
     }
 
     public function setUp()
@@ -87,6 +99,8 @@ abstract class BasetkTask extends sfDoctrineRecord
              'hasManyRoots' => true,
              'rootColumnName' => 'root_id',
              ));
+        $timestampable0 = new Doctrine_Template_Timestampable();
         $this->actAs($nestedset0);
+        $this->actAs($timestampable0);
     }
 }

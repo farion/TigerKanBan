@@ -17,6 +17,41 @@ class tkTaskTable extends Doctrine_Table
         return Doctrine_Core::getTable('tkTask');
     }
 
+    public function findRootByTeamId($team_id)
+    {
+        $area = Doctrine::getTable('tkArea')
+            ->createQuery()
+            ->where("sf_guard_group_id = ?", $team_id)
+            ->orderBy('pos ASC')
+            ->fetchOne();
+
+        if(!$area){
+            $area = new tkArea();
+            $area->name = "Backlog";
+            $area->pos = 0;
+            $area->sf_guard_group_id = $team_id;
+            $area->save();
+        }
+
+        $root = Doctrine_Query::create()
+            ->from('tkTask')
+            ->where("level = ? AND area_id = ?", array(0, $area->getId()))
+            ->fetchOne();
+
+        if (!$root) {
+
+            $root = new tkTask();
+            $root->area_id = $area->getId();
+            $root->save();
+
+            $this->getTree()->createRoot($root);
+        }
+
+        return $root;
+    }
+
+
+
     public function findRootByArea(tkArea $area)
     {
         $root = Doctrine_Query::create()

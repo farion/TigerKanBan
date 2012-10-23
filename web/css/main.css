@@ -130,6 +130,17 @@ a {
     right: 10px;
 }
 
+#teamchooser {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    margin-left: -80px;
+}
+
+#teamchooser select {
+    width: 160px;
+}
+
 .areacol {
     float: left;
     padding: 10px;
@@ -153,6 +164,11 @@ label, input[type=text], input[type=password] {
 input.text {
     margin-bottom: 12px;
     width: 95%;
+    padding: .4em;
+}
+
+select {
+    width: 90%;
     padding: .4em;
 }
 
@@ -265,4 +281,8 @@ fieldset {
 
 .warning {
     color: #FF2200;
+}
+
+#filter-radio {
+    display: inline-block;
 }
