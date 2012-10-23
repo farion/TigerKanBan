@@ -212,7 +212,7 @@ fieldset {
     font-size: 10px;
 }
 
-.ui-sortable li {
+.ui-sortable > li {
     margin: 0 5px 5px 0;
     padding: 2px;
     width: 100%;
@@ -224,11 +224,13 @@ fieldset {
     border-radius: 2px;
     font-weight: normal;
     cursor: move;
+    border-color: #FFDB80;
+    background: #FFF9E6;
 }
 
 .ui-sortable li.blocked {
     border: 1px solid #FF0084;
-    background:
+    background: #FFf6f6;
 }
 
 .ui-sortable li button {
@@ -250,7 +252,8 @@ fieldset {
 }
 
 .ui-sortable li .title.withcomment {
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #666;
+    margin-bottom: 5px;
 }
 
 .ui-sortable li .readydate {
