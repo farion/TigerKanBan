@@ -141,27 +141,40 @@ a {
     width: 160px;
 }
 
-.areacol {
-    float: left;
-    padding: 10px;
+#main {
     margin: 5px;
-    border: 1px solid #ddd;
-    width: 200px;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-    -khtml-border-radius: 2px;
-    border-radius: 2px;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
 }
 
-.areacoltitle {
-    font-weight: bold;
+.areacol {
+    float: left;
+    padding: 5px;
+    margin: 0px;
+    border-left: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    background-color: #fff;
+    width: 200px;
+}
+
+.areacol.finish_right {
+    border-left: 1px dashed #ddd;
+}
+
+.areacol.rowdesc {
+    width: 100px;
+}
+
+.areacoltitle strong {
+    display: block;
+    margin-bottom: 6px;
 }
 
 label, input[type=text], input[type=password] {
     display: block;
 }
 
-input.text {
+input.text, textarea {
     margin-bottom: 12px;
     width: 95%;
     padding: .4em;
@@ -183,20 +196,25 @@ fieldset {
 }
 
 .validateTips {
-    border: 1px solid transparent;
-    padding: 0.3em;
+    font-weight: bold;
+}
+
+.validateTips.ui-state-highlight {
+    color: #FF0084;
+    border: none;
 }
 
 .ui-sortable {
-    margin: 10px 0;
+    margin: 0;
     list-style-type: none;
     float: left;
-    width: 180px;
+    width: 193px;
+    font-size: 10px;
 }
 
 .ui-sortable li {
     margin: 0 5px 5px 0;
-    padding: 5px;
+    padding: 2px;
     width: 100%;
     position: relative;
     min-height: 28px;
@@ -208,25 +226,47 @@ fieldset {
     cursor: move;
 }
 
+.ui-sortable li.blocked {
+    border: 1px solid #FF0084;
+    background:
+}
+
 .ui-sortable li button {
     position: absolute;
     top: 5px;
     right: 5px;
 }
 
-.ui-sortable li .user,
+.ui-sortable li.ui-state-default {
+    color: #666;
+}
+
 .ui-sortable li .text {
-    width: 130px;
+    margin: 20px 0px;
+}
+
+.ui-sortable li .readydate {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+}
+
+.ui-sortable li .createddate {
+    position: absolute;
+    left: 2px;
+    top: 2px;
 }
 
 .ui-sortable li .user {
-    font-size: 90%;
-    margin-top: 5px;
-    display: block;
+    position: absolute;
+    right: 2px;
+    bottom: 2px;
 }
 
-.ui-sortable li.ui-state-default {
-    color: #666;
+.ui-sortable li .creator {
+    position: absolute;
+    left: 2px;;
+    bottom: 2px;
 }
 
 #loader {
@@ -293,8 +333,8 @@ fieldset {
     border: 1px solid #ddd;
     width: 200px;
     height: 70px;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-    -khtml-border-radius: 2px;
-    border-radius: 2px;
+}
+
+#archivetarget ul {
+    height: 50px;
 }

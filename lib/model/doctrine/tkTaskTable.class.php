@@ -25,23 +25,38 @@ class tkTaskTable extends Doctrine_Table
             ->orderBy('pos ASC')
             ->fetchOne();
 
-        if(!$area){
+        if (!$area) {
             $area = new tkArea();
-            $area->name = "Backlog";
+            $area->name = "Ideas";
             $area->pos = 0;
             $area->sf_guard_group_id = $team_id;
             $area->save();
         }
 
+        $lane = Doctrine::getTable('tkLane')
+            ->createQuery()
+            ->where("sf_guard_group_id = ?", $team_id)
+            ->orderBy('pos ASC')
+            ->fetchOne();
+
+        if (!$lane) {
+            $lane = new tkArea();
+            $lane->name = "Features";
+            $lane->pos = 0;
+            $lane->sf_guard_group_id = $team_id;
+            $lane->save();
+        }
+
         $root = Doctrine_Query::create()
             ->from('tkTask')
-            ->where("level = ? AND area_id = ?", array(0, $area->getId()))
+            ->where("level = ? AND area_id = ? AND lane_id = ?", array(0, $area->getId(), $lane->getId()))
             ->fetchOne();
 
         if (!$root) {
 
             $root = new tkTask();
             $root->area_id = $area->getId();
+            $root->lane_id = $lane->getId();
             $root->save();
 
             $this->getTree()->createRoot($root);
@@ -51,18 +66,18 @@ class tkTaskTable extends Doctrine_Table
     }
 
 
-
-    public function findRootByArea(tkArea $area)
+    public function findRootByAreaAndLane(tkArea $area, tkLane $lane)
     {
         $root = Doctrine_Query::create()
             ->from('tkTask')
-            ->where("level = ? AND area_id = ?", array(0, $area->getId()))
+            ->where("level = ? AND area_id = ? AND lane_id = ?", array(0, $area->getId(),$lane->getId()))
             ->fetchOne();
 
         if (!$root) {
 
             $root = new tkTask();
             $root->area_id = $area->getId();
+            $root->lane_id = $lane->getId();
             $root->save();
 
             $this->getTree()->createRoot($root);

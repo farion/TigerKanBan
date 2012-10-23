@@ -133,7 +133,7 @@ abstract class BasesfGuardUser extends sfDoctrineRecord
 
         $this->hasMany('tkTask', array(
              'local' => 'id',
-             'foreign' => 'sf_guard_user_id'));
+             'foreign' => 'creator_id'));
 
         $timestampable0 = new Doctrine_Template_Timestampable(array(
              ));

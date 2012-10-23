@@ -4,16 +4,21 @@ class tkTaskForm extends BasetkTaskForm
 {
     public function configure()
     {
+        $this->setWidget("comment",new sfWidgetFormTextarea());
+
+        $this->setWidget("blocked", new sfWidgetFormChoice(array('choices' => array(0 => 'No, task is actionable', 1 => 'Yes, task is currently blocked'))));
+
+        $this->disableCSRFProtection();
+
         $this->widgetSchema->setLabels(array(
             "title" => "Title",
             "link" => "Link",
             "effort" => "Effort in hours",
             "sf_guard_user_id" => "Assigned to",
-            "progress" => "Progress in %"
+            "comment" => "Note",
+            "blocked" => "Is blocked?"
         ));
 
-        $this->disableCSRFProtection();
-
-        $this->useFields(array("title", "link", "effort", "sf_guard_user_id","progress"));
+        $this->useFields(array("title", "comment", "link", "effort", "sf_guard_user_id","blocked"));
     }
 }

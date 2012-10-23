@@ -12,6 +12,7 @@
  * @property Doctrine_Collection $permissions
  * @property Doctrine_Collection $sfGuardGroupPermission
  * @property Doctrine_Collection $sfGuardUserGroup
+ * @property Doctrine_Collection $tkLane
  * @property Doctrine_Collection $tkArea
  * 
  * @method integer             getId()                     Returns the current record's "id" value
@@ -21,6 +22,7 @@
  * @method Doctrine_Collection getPermissions()            Returns the current record's "permissions" collection
  * @method Doctrine_Collection getSfGuardGroupPermission() Returns the current record's "sfGuardGroupPermission" collection
  * @method Doctrine_Collection getSfGuardUserGroup()       Returns the current record's "sfGuardUserGroup" collection
+ * @method Doctrine_Collection getTkLane()                 Returns the current record's "tkLane" collection
  * @method Doctrine_Collection getTkArea()                 Returns the current record's "tkArea" collection
  * @method sfGuardGroup        setId()                     Sets the current record's "id" value
  * @method sfGuardGroup        setName()                   Sets the current record's "name" value
@@ -29,6 +31,7 @@
  * @method sfGuardGroup        setPermissions()            Sets the current record's "permissions" collection
  * @method sfGuardGroup        setSfGuardGroupPermission() Sets the current record's "sfGuardGroupPermission" collection
  * @method sfGuardGroup        setSfGuardUserGroup()       Sets the current record's "sfGuardUserGroup" collection
+ * @method sfGuardGroup        setTkLane()                 Sets the current record's "tkLane" collection
  * @method sfGuardGroup        setTkArea()                 Sets the current record's "tkArea" collection
  * 
  * @package    tigerkanban
@@ -78,6 +81,10 @@ abstract class BasesfGuardGroup extends sfDoctrineRecord
         $this->hasMany('sfGuardUserGroup', array(
              'local' => 'id',
              'foreign' => 'group_id'));
+
+        $this->hasMany('tkLane', array(
+             'local' => 'id',
+             'foreign' => 'sf_guard_group_id'));
 
         $this->hasMany('tkArea', array(
              'local' => 'id',

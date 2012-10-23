@@ -1,6 +1,8 @@
 $(document).ready(function() {
 
   var taskdata = [];
+  var areadata = [];
+  var lanedata = []
 
   function triggerHeartBeat() {
     setTimeout(function() {
@@ -29,7 +31,10 @@ $(document).ready(function() {
     var tips = $(".validateTips");
     tips.html("Please enter at least a title.");
     $("#task-frm").dialog("open");
+    $('#tk_task_blocked').val(0);
+    $('#tk_task_sf_guard_user_id').val('');
     $("select").selectmenu();
+    $("select").selectmenu('refresh');
   }
 
   function editTask(task_id) {
@@ -46,16 +51,18 @@ $(document).ready(function() {
 
     var id = $('#tk_task_id');
     var title = $('#tk_task_title');
+    var comment = $('#tk_task_comment');
+    var blocked = $('#tk_task_blocked');
     var link = $('#tk_task_link');
     var effort = $('#tk_task_effort');
-    var progress = $('#tk_task_progress');
     var user = $('#tk_task_sf_guard_user_id');
 
     id.val(task.id);
     title.val(task.title);
+    comment.val(task.comment);
     link.val(task.link);
     effort.val(task.effort);
-    progress.val(task.progress);
+    blocked.val(task.blocked ? 1 : 0);
     user.val(task.user ? task.user.id : '');
 
     var tips = $(".validateTips");
@@ -66,9 +73,9 @@ $(document).ready(function() {
 
   }
 
-  function moveTask(area_id, task_id, task_pos) {
+  function moveTask(area_id, lane_id, task_id, task_pos) {
 
-    if(!area_id.match(/^[0-9]+$/)){
+    if(!area_id.match(/^[0-9]+$/)) {
 
       $('#dialog-archive').dialog("open");
       return;
@@ -81,6 +88,7 @@ $(document).ready(function() {
       data: {
         team_id: $('#team_id').val(),
         area_id: area_id,
+        lane_id: lane_id,
         task_id: task_id,
         task_pos: task_pos
       },
@@ -134,11 +142,36 @@ $(document).ready(function() {
 
         $('#main').html("");
 
-        $.each(data, function(index, elem) {
-          $('#main').append('<div class="areacol" id="areacol_' + elem.id + '"><div class="areacoltitle">' + elem.name + '</div><ul class="tasklist"></ul></div>');
+        $('#main').append('<div class="areacol emptycol rowdesc areacol_x"></div>');
+
+        areadata = data.areas;
+        lanedata = data.lanes;
+
+        $.each(data.areas, function(index, area) {
+          $('#main').append('<div class="areacol coldesc areacol_x' +
+            ((area.area_type === "2") ? ' finish_right' : (area.area_type === "1") ? ' finish_left' : '') + '"' +
+            ' id="areacol_' + area.id + '">' +
+            '<div class="areacoltitle">' +
+            '<strong>' + ((area.area_type != "2") ? area.name : '&nbsp;') + '</strong>' +
+            ((area.area_type === "2") ? 'Finished' : ((area.area_type === "1") ? 'Started' : '')) +
+            (area.wip ? ' WIP: ' + area.wip : '') +
+            '</div></div>');
         });
 
-        $('#main').width(data.length * $('.areacol').first().outerWidth(true));
+        $.each(data.lanes, function(lindex, lane) {
+          $('#main').append('<div class="areacol rowdesc areacol_' + lane.id + '" id="lanecol_' + lane.id + '">' +
+            '<div class="areacoltitle"><strong>' + lane.name + '</strong></div></div>');
+          $.each(data.areas, function(aindex, area) {
+            $('#main').append('<div class="areacol areacol_' + lane.id +
+              ((area.area_type === "2") ? ' finish_right' : (area.area_type === "1") ? ' finish_left' : '') +
+              '" id="areacol_' + area.id + '_' + lane.id + '">' +
+              '<ul class="tasklist"></ul></div>');
+          });
+        });
+
+
+        //TODO all
+        $('#main').width($('.emptycol').first().outerWidth(true) + ((data.areas.length) * $('.areacol:not(.rowdesc)').first().outerWidth(true)));
 
         loadTasks();
 
@@ -167,15 +200,22 @@ $(document).ready(function() {
         taskdata = data;
 
         $.each(data, function(index, task) {
-          $('#areacol_' + task.area_id + ' ul').append('<li class="ui-state-default" id="task_' + task.id + '">' +
-            '<div class="text"><strong>' + task.title + '</strong>' +
-            (task.link ? ' <a href="' + task.link + '" target="_blank" title="' + task.link + '">Link</a>' : '') +
-            '<span class="user">' +
-            (task.username ? '@' + task.username + '' : '@N/A') +
-            (task.effort ? ' | ' + task.effort + 'h' : '') +
-            (task.progress ? ' | ' + task.progress + '%' : ' | 0%') +
-            '</span></div>' +
-            '<button>Edit</button>' +
+          $('#areacol_' + task.area_id + '_' + task.lane_id + '  ul').append('<li class="ui-state-default' + (task.blocked ? ' blocked' : '') + '" id="task_' + task.id + '">' +
+            '<div class="text"><strong>' + task.title + '</strong>' + (task.comment ? '<br>' + task.comment : '') +
+            (task.link ? '<br><a href="' + task.link + '" target="_blank" title="' + task.link + '">Link</a>' : '') +
+            '</div>' +
+            '<div class="creator">' +
+            (task.creatorname ? task.creatorname : '') +
+            '</div>' +
+            '<div class="user">' +
+            (task.username ? '<strong>' + task.username + '</strong>' : '') + (task.effort ? ' | ' + task.effort + 'h' : '') +
+            '</div>' +
+            '<div class="createddate">' +
+            (task.created_at ? task.created_at : '') +
+            '</div>' +
+            '<div class="readydate">' +
+            (task.readydate ? task.readydate : '') +
+            '</div>' +
             '</li>');
         });
 
@@ -185,46 +225,56 @@ $(document).ready(function() {
           stop: function(event, ui) {
 
             var task = $(ui.item[0]);
+            var parentid = task.parent().parent().attr('id');
+
             return moveTask(
-              task.parent().parent().attr('id').substr(8),
+              parentid.substr(8, parentid.lastIndexOf('_') - 8),
+              parentid.substr(parentid.lastIndexOf('_') + 1),
               task.attr('id').substr(5),
               task.index()
             );
           }
         }).disableSelection();
 
-        var height = 0;
-        $('.tasklist').each(function() {
-          $(this).height('auto');
-          var myheight = $(this).height();
-          if(myheight > height) {
-            height = myheight;
-          }
+        $('#main').height(0);
+        $.each($.merge([
+          { id: 'x' }
+        ], lanedata), function(index, value) {
+          var height = 0;
+          $('.areacol_' + value.id + ' ul').each(function() {
+            $(this).height('auto');
+            var myheight = $(this).height();
+            if(myheight > height) {
+              height = myheight;
+            }
+          });
+          $('.areacol_' + value.id + ' ul').height(height + ((value.id === 'x') ? 0 : 60));
+
+          height = 0;
+          $('.areacol_' + value.id).each(function() {
+            $(this).height('auto');
+            var myheight = $(this).height();
+            if(myheight > height) {
+              height = myheight;
+            }
+          });
+          $('.areacol_' + value.id).height(height);
+          $('#main').height($('#main').height() + $('.areacol_' + value.id).first().outerHeight(true));
         });
-        $('.tasklist').height(height + 60);
+
 
         $('.tasklist a, .tasklist button').tooltip(getTooltipOptions());
 
         $('.tasklist li').dblclick(function(event) {
           editTask($(this).attr('id').substr(5));
         });
-
-        $('.tasklist button').button({
-          icons: {
-            primary: "ui-icon-pencil"
-          },
-          text: false
-        }).click(function(event) {
-            editTask($(this).parent().attr('id').substr(5));
-            event.preventDefault();
-          });
       }
     });
   }
 
-  $( "#dialog-archive" ).dialog({
+  $("#dialog-archive").dialog({
     resizable: false,
-    height:140,
+    height: 140,
     modal: true,
     autoOpen: false,
     buttons: {
@@ -236,27 +286,27 @@ $(document).ready(function() {
             task_id: $($('#archivetarget ul').children()[0]).attr('id').substr(5)
           },
           success: function(data, textStatus, jqxhr) {
-            $('#archivetarget ul li').hide("drop",{},500,function(){
+            $('#archivetarget ul li').hide("drop", {}, 500, function() {
               $('#archivetarget ul').html("");
             });
-            $( "#dialog-archive" ).dialog( "close" );
+            $("#dialog-archive").dialog("close");
           },
-          error: function(){
+          error: function() {
             alert("Something went wrong. Sorry!");
-            $( "#dialog-archive" ).dialog( "close" );
+            $("#dialog-archive").dialog("close");
           }
         });
       },
       Cancel: function() {
         loadTasks();
-        $( this ).dialog( "close" );
+        $(this).dialog("close");
       }
     }
   });
 
   $("#task-frm").dialog({
     autoOpen: false,
-    height: 430,
+    height: 530,
     width: 500,
     modal: true,
     buttons: {
@@ -265,9 +315,10 @@ $(document).ready(function() {
         var bValid = true;
         var id = $('#tk_task_id');
         var title = $('#tk_task_title');
+        var comment = $('#tk_task_comment');
         var link = $('#tk_task_link');
         var effort = $('#tk_task_effort');
-        var progress = $('#tk_task_progress');
+        var blocked = $('#tk_task_blocked');
         var user = $('#tk_task_sf_guard_user_id');
         var csrftoken = $('#tk_task__csrf_token');
         var tips = $(".validateTips");
@@ -276,11 +327,10 @@ $(document).ready(function() {
 
 
         bValid = bValid && checkLength(title, "title", 3, 255);
-        bValid = bValid && checkLength(link, "link", 3, 255);
-        bValid = bValid && checkLength(effort, "effort", 1, 5);
-        bValid = bValid && checkRegexp(link, /^https?:\/\/.*$/i, "Link must be a valid url.");
-        bValid = bValid && checkRegexp(effort, /^[0-9]+\.{0,1}[0-9]*$/i, "Effort must be a float.");
-        bValid = bValid && checkRegexp(progress, /^100$|^[0-9]{1,2}$/i, "Progress must be between 0 and 100.");
+        bValid = bValid && checkLength(link, "link", 0, 255);
+        bValid = bValid && checkLength(effort, "effort", 0, 5);
+        bValid = bValid && checkRegexp(link, /^https?:\/\/.*$|^$/i, "Link must be a valid url.");
+        bValid = bValid && checkRegexp(effort, /^[0-9]+\.{0,1}[0-9]*$|^$/i, "Effort must be a float.");
 
         if(bValid) {
           $.ajax({
@@ -291,9 +341,10 @@ $(document).ready(function() {
               task: {
                 id: id.val(),
                 title: title.val(),
+                comment: comment.val(),
+                blocked: blocked.val(),
                 link: link.val(),
                 effort: effort.val(),
-                progress: progress.val(),
                 sf_guard_user_id: user.val()
               }
             },
@@ -313,7 +364,7 @@ $(document).ready(function() {
       }
     },
     close: function() {
-      $('#tk_task_sf_guard_user_id, #tk_task_title, #tk_task_link, #tk_task_effort, #tk_task_progress').val("").removeClass("ui-state-error");
+      $('#tk_task_sf_guard_user_id, #tk_task_title, #tk_task_link, #tk_task_effort, #tk_task_comment, #tk_task_blocked').val("").removeClass("ui-state-error");
     }
   });
 
@@ -353,7 +404,7 @@ $(document).ready(function() {
     }
   });
 
-  $("input[type=text], input[type=password]").addClass("text ui-widget-content ui-corner-all");
+  $("input[type=text], input[type=password], textarea").addClass("text ui-widget-content ui-corner-all");
 
 
   $("#addtask-btn").button({
@@ -380,7 +431,7 @@ $(document).ready(function() {
 
   $('#filter-radio').buttonset();
 
-  $("#filter-radio :radio").click(function(){
+  $("#filter-radio :radio").click(function() {
     loadAreas();
   });
 

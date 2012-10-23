@@ -1,5 +1,7 @@
 TODO 0.1
 --------
+
+- Ready Date
 - assign to me shortcut
 - delete tasks
 - users should be filtered by team for assigning
@@ -7,7 +9,6 @@ TODO 0.1
 TODO 0.2
 --------
 - edit own password
-- add note to tasks
 - bugtracking integration -> url with placeholder for ticket number
 - add an action log
 - move tasks between teams

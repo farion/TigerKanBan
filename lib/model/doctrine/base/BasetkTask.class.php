@@ -8,10 +8,17 @@
  * @property string $title
  * @property string $link
  * @property integer $area_id
+ * @property integer $lane_id
+ * @property integer $creator_id
  * @property integer $sf_guard_user_id
  * @property float $effort
- * @property integer $progress
+ * @property boolean $finished
+ * @property datetime $readyDate
  * @property boolean $archived
+ * @property boolean $blocked
+ * @property text $comment
+ * @property tkLane $lane
+ * @property sfGuardUser $creator
  * @property tkArea $area
  * @property sfGuardUser $user
  * @property tkTask $root
@@ -20,10 +27,17 @@
  * @method string              getTitle()            Returns the current record's "title" value
  * @method string              getLink()             Returns the current record's "link" value
  * @method integer             getAreaId()           Returns the current record's "area_id" value
+ * @method integer             getLaneId()           Returns the current record's "lane_id" value
+ * @method integer             getCreatorId()        Returns the current record's "creator_id" value
  * @method integer             getSfGuardUserId()    Returns the current record's "sf_guard_user_id" value
  * @method float               getEffort()           Returns the current record's "effort" value
- * @method integer             getProgress()         Returns the current record's "progress" value
+ * @method boolean             getFinished()         Returns the current record's "finished" value
+ * @method datetime            getReadyDate()        Returns the current record's "readyDate" value
  * @method boolean             getArchived()         Returns the current record's "archived" value
+ * @method boolean             getBlocked()          Returns the current record's "blocked" value
+ * @method text                getComment()          Returns the current record's "comment" value
+ * @method tkLane              getLane()             Returns the current record's "lane" value
+ * @method sfGuardUser         getCreator()          Returns the current record's "creator" value
  * @method tkArea              getArea()             Returns the current record's "area" value
  * @method sfGuardUser         getUser()             Returns the current record's "user" value
  * @method tkTask              getRoot()             Returns the current record's "root" value
@@ -31,10 +45,17 @@
  * @method tkTask              setTitle()            Sets the current record's "title" value
  * @method tkTask              setLink()             Sets the current record's "link" value
  * @method tkTask              setAreaId()           Sets the current record's "area_id" value
+ * @method tkTask              setLaneId()           Sets the current record's "lane_id" value
+ * @method tkTask              setCreatorId()        Sets the current record's "creator_id" value
  * @method tkTask              setSfGuardUserId()    Sets the current record's "sf_guard_user_id" value
  * @method tkTask              setEffort()           Sets the current record's "effort" value
- * @method tkTask              setProgress()         Sets the current record's "progress" value
+ * @method tkTask              setFinished()         Sets the current record's "finished" value
+ * @method tkTask              setReadyDate()        Sets the current record's "readyDate" value
  * @method tkTask              setArchived()         Sets the current record's "archived" value
+ * @method tkTask              setBlocked()          Sets the current record's "blocked" value
+ * @method tkTask              setComment()          Sets the current record's "comment" value
+ * @method tkTask              setLane()             Sets the current record's "lane" value
+ * @method tkTask              setCreator()          Sets the current record's "creator" value
  * @method tkTask              setArea()             Sets the current record's "area" value
  * @method tkTask              setUser()             Sets the current record's "user" value
  * @method tkTask              setRoot()             Sets the current record's "root" value
@@ -61,6 +82,13 @@ abstract class BasetkTask extends sfDoctrineRecord
         $this->hasColumn('area_id', 'integer', null, array(
              'type' => 'integer',
              ));
+        $this->hasColumn('lane_id', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('creator_id', 'integer', 4, array(
+             'type' => 'integer',
+             'length' => 4,
+             ));
         $this->hasColumn('sf_guard_user_id', 'integer', 4, array(
              'type' => 'integer',
              'length' => 4,
@@ -68,17 +96,34 @@ abstract class BasetkTask extends sfDoctrineRecord
         $this->hasColumn('effort', 'float', null, array(
              'type' => 'float',
              ));
-        $this->hasColumn('progress', 'integer', null, array(
-             'type' => 'integer',
+        $this->hasColumn('finished', 'boolean', null, array(
+             'type' => 'boolean',
+             ));
+        $this->hasColumn('readyDate', 'datetime', null, array(
+             'type' => 'datetime',
              ));
         $this->hasColumn('archived', 'boolean', null, array(
              'type' => 'boolean',
+             ));
+        $this->hasColumn('blocked', 'boolean', null, array(
+             'type' => 'boolean',
+             ));
+        $this->hasColumn('comment', 'text', null, array(
+             'type' => 'text',
              ));
     }
 
     public function setUp()
     {
         parent::setUp();
+        $this->hasOne('tkLane as lane', array(
+             'local' => 'lane_id',
+             'foreign' => 'id'));
+
+        $this->hasOne('sfGuardUser as creator', array(
+             'local' => 'creator_id',
+             'foreign' => 'id'));
+
         $this->hasOne('tkArea as area', array(
              'local' => 'area_id',
              'foreign' => 'id'));

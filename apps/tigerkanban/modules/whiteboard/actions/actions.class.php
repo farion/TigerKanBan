@@ -17,8 +17,6 @@ class whiteboardActions extends sfActions
      */
     public function executeIndex(sfWebRequest $request)
     {
-
-
         if(!Doctrine_Query::create()
             ->from('sfGuardGroup g')
             ->leftJoin("g.users u")
@@ -33,14 +31,20 @@ class whiteboardActions extends sfActions
 
     public function executeGetAreasJson(sfWebRequest $request)
     {
-        $this->areas = Doctrine::getTable('tkArea')
+        $areas = Doctrine::getTable('tkArea')
+            ->createQuery()
+            ->where("sf_guard_group_id = ?",$request->getParameter("team_id"))
+            ->orderBy('pos ASC')
+            ->fetchArray();
+
+        $lanes = Doctrine::getTable('tkLane')
             ->createQuery()
             ->where("sf_guard_group_id = ?",$request->getParameter("team_id"))
             ->orderBy('pos ASC')
             ->fetchArray();
 
         $this->getResponse()->setContentType('text/json');
-        return $this->renderText(json_encode($this->areas));
+        return $this->renderText(json_encode(array('areas' => $areas, 'lanes' => $lanes)));
     }
 
     public function executeUpdateTaskJson(sfWebRequest $request)
@@ -57,8 +61,11 @@ class whiteboardActions extends sfActions
             $taskform->save();
 
             if(!$task){
+                $task = $taskform->getObject();
                 $root = Doctrine::getTable('tkTask')->findRootByTeamId($request->getParameter('team_id'));
-                $taskform->getObject()->getNode()->insertAsLastChildOf($root);
+                $task->getNode()->insertAsLastChildOf($root);
+                $task->creator_id = $this->getUser()->getGuardUser()->getId();
+                $task->save();
             }
 
             $this->getResponse()->setContentType('text/json');
@@ -71,11 +78,12 @@ class whiteboardActions extends sfActions
     public function executeGetTasksJson(sfWebRequest $request)
     {
         $q = Doctrine_Query::create()
-            ->select("t.title, t.effort, t.link, u.username AS username, r.area_id AS area_id, t.progress")
+            ->select("t.title, t.effort, t.link, c.username AS creatorname, u.username AS username, r.area_id AS area_id, r.lane_id AS lane_id, DATE(t.created_at) AS created_at, DATE(t.readydate) AS readydate, t.comment, blocked")
             ->from("tkTask t")
             ->leftJoin("t.root r")
             ->where("t.level = 1 AND (t.archived != 1 OR t.archived IS NULL)")
-            ->leftJoin("t.user u");
+            ->leftJoin("t.user u")
+            ->leftJoin("t.creator c");
 
         if($request->getParameter("filter","all") == "me"){
             $q->andWhere("u.id = ?",$this->getUser()->getGuardUser()->getId());
@@ -91,7 +99,8 @@ class whiteboardActions extends sfActions
     public function executeMoveTaskJson(sfWebRequest $request)
     {
         $this->forward404Unless($area = Doctrine::getTable('tkArea')->find($request->getParameter('area_id')));
-        $this->forward404Unless($root = Doctrine::getTable('tkTask')->findRootByArea($area));
+        $this->forward404Unless($lane = Doctrine::getTable('tkLane')->find($request->getParameter('lane_id')));
+        $this->forward404Unless($root = Doctrine::getTable('tkTask')->findRootByAreaAndLane($area,$lane));
         $this->forward404Unless($task = Doctrine::getTable('tkTask')->find($request->getParameter('task_id')));
 
         $pos = $request->getParameter("task_pos") - 1;

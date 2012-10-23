@@ -1,3 +1,17 @@
+tkLane:
+  actAs:
+    Timestampable: ~
+  columns:
+    name: string(255)
+    pos: integer
+    sf_guard_group_id: integer(4);
+  relations:
+    team:
+      class: sfGuardGroup
+      local: sf_guard_group_id
+      foreign: id
+      type: one
+
 tkArea:
   actAs:
     Timestampable: ~
@@ -5,6 +19,8 @@ tkArea:
     name: string(255)
     pos: integer
     sf_guard_group_id: integer(4),
+    wip: integer
+    area_type: integer
   relations:
     team:
       class: sfGuardGroup
@@ -22,11 +38,26 @@ tkTask:
     title: string(255)
     link: string(255)
     area_id: integer
+    lane_id: integer
+    creator_id: integer(4)
     sf_guard_user_id: integer(4)
     effort: float
-    progress: integer
+    finished: boolean
+    readyDate: datetime
     archived: boolean
+    blocked: boolean
+    comment: text
   relations:
+    lane:
+      class: tkLane
+      local: lane_id
+      foreign: id
+      type: one
+    creator:
+      class: sfGuardUser
+      local: creator_id
+      foreign: id
+      type: one
     area:
       class: tkArea
       local: area_id

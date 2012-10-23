@@ -8,17 +8,23 @@
  * @property string $name
  * @property integer $pos
  * @property integer $sf_guard_group_id
+ * @property integer $wip
+ * @property integer $area_type
  * @property sfGuardGroup $team
  * @property Doctrine_Collection $tkTask
  * 
  * @method string              getName()              Returns the current record's "name" value
  * @method integer             getPos()               Returns the current record's "pos" value
  * @method integer             getSfGuardGroupId()    Returns the current record's "sf_guard_group_id" value
+ * @method integer             getWip()               Returns the current record's "wip" value
+ * @method integer             getAreaType()          Returns the current record's "area_type" value
  * @method sfGuardGroup        getTeam()              Returns the current record's "team" value
  * @method Doctrine_Collection getTkTask()            Returns the current record's "tkTask" collection
  * @method tkArea              setName()              Sets the current record's "name" value
  * @method tkArea              setPos()               Sets the current record's "pos" value
  * @method tkArea              setSfGuardGroupId()    Sets the current record's "sf_guard_group_id" value
+ * @method tkArea              setWip()               Sets the current record's "wip" value
+ * @method tkArea              setAreaType()          Sets the current record's "area_type" value
  * @method tkArea              setTeam()              Sets the current record's "team" value
  * @method tkArea              setTkTask()            Sets the current record's "tkTask" collection
  * 
@@ -42,6 +48,12 @@ abstract class BasetkArea extends sfDoctrineRecord
         $this->hasColumn('sf_guard_group_id', 'integer', 4, array(
              'type' => 'integer',
              'length' => 4,
+             ));
+        $this->hasColumn('wip', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('area_type', 'integer', null, array(
+             'type' => 'integer',
              ));
     }
 
