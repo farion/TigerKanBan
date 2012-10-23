@@ -48,12 +48,14 @@ $(document).ready(function() {
     var title = $('#tk_task_title');
     var link = $('#tk_task_link');
     var effort = $('#tk_task_effort');
+    var progress = $('#tk_task_progress');
     var user = $('#tk_task_sf_guard_user_id');
 
     id.val(task.id);
     title.val(task.title);
     link.val(task.link);
     effort.val(task.effort);
+    progress.val(task.progress);
     user.val(task.user ? task.user.id : '');
 
     var tips = $(".validateTips");
@@ -65,6 +67,14 @@ $(document).ready(function() {
   }
 
   function moveTask(area_id, task_id, task_pos) {
+
+    if(!area_id.match(/^[0-9]+$/)){
+
+      $('#dialog-archive').dialog("open");
+      return;
+    }
+
+
     $.ajax({
       url: baseurl + 'index/moveTaskJson',
       method: 'POST',
@@ -163,6 +173,7 @@ $(document).ready(function() {
             '<span class="user">' +
             (task.username ? '@' + task.username + '' : '@N/A') +
             (task.effort ? ' | ' + task.effort + 'h' : '') +
+            (task.progress ? ' | ' + task.progress + '%' : ' | 0%') +
             '</span></div>' +
             '<button>Edit</button>' +
             '</li>');
@@ -170,9 +181,11 @@ $(document).ready(function() {
 
         $('.tasklist').sortable({
           connectWith: ".tasklist",
+          placeholder: "ui-state-highlight",
           stop: function(event, ui) {
+
             var task = $(ui.item[0]);
-            moveTask(
+            return moveTask(
               task.parent().parent().attr('id').substr(8),
               task.attr('id').substr(5),
               task.index()
@@ -209,9 +222,41 @@ $(document).ready(function() {
     });
   }
 
+  $( "#dialog-archive" ).dialog({
+    resizable: false,
+    height:140,
+    modal: true,
+    autoOpen: false,
+    buttons: {
+      "Archive this task": function() {
+        $.ajax({
+          url: baseurl + 'index/archiveTaskJson',
+          method: 'POST',
+          data: {
+            task_id: $($('#archivetarget ul').children()[0]).attr('id').substr(5)
+          },
+          success: function(data, textStatus, jqxhr) {
+            $('#archivetarget ul li').hide("drop",{},500,function(){
+              $('#archivetarget ul').html("");
+            });
+            $( "#dialog-archive" ).dialog( "close" );
+          },
+          error: function(){
+            alert("Something went wrong. Sorry!");
+            $( "#dialog-archive" ).dialog( "close" );
+          }
+        });
+      },
+      Cancel: function() {
+        loadTasks();
+        $( this ).dialog( "close" );
+      }
+    }
+  });
+
   $("#task-frm").dialog({
     autoOpen: false,
-    height: 370,
+    height: 430,
     width: 500,
     modal: true,
     buttons: {
@@ -222,6 +267,7 @@ $(document).ready(function() {
         var title = $('#tk_task_title');
         var link = $('#tk_task_link');
         var effort = $('#tk_task_effort');
+        var progress = $('#tk_task_progress');
         var user = $('#tk_task_sf_guard_user_id');
         var csrftoken = $('#tk_task__csrf_token');
         var tips = $(".validateTips");
@@ -234,6 +280,7 @@ $(document).ready(function() {
         bValid = bValid && checkLength(effort, "effort", 1, 5);
         bValid = bValid && checkRegexp(link, /^https?:\/\/.*$/i, "Link must be a valid url.");
         bValid = bValid && checkRegexp(effort, /^[0-9]+\.{0,1}[0-9]*$/i, "Effort must be a float.");
+        bValid = bValid && checkRegexp(progress, /^100$|^[0-9]{1,2}$/i, "Progress must be between 0 and 100.");
 
         if(bValid) {
           $.ajax({
@@ -246,6 +293,7 @@ $(document).ready(function() {
                 title: title.val(),
                 link: link.val(),
                 effort: effort.val(),
+                progress: progress.val(),
                 sf_guard_user_id: user.val()
               }
             },
@@ -265,7 +313,7 @@ $(document).ready(function() {
       }
     },
     close: function() {
-      $('#tk_task_sf_guard_user_id, #tk_task_title, #tk_task_link, #tk_task_effort').val("").removeClass("ui-state-error");
+      $('#tk_task_sf_guard_user_id, #tk_task_title, #tk_task_link, #tk_task_effort, #tk_task_progress').val("").removeClass("ui-state-error");
     }
   });
 
@@ -341,6 +389,7 @@ $(document).ready(function() {
       loadAreas();
     }
   });
+
 
   loadAreas();
   triggerHeartBeat();

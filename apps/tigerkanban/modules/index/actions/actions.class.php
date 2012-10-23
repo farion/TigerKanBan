@@ -71,10 +71,10 @@ class indexActions extends sfActions
     public function executeGetTasksJson(sfWebRequest $request)
     {
         $q = Doctrine_Query::create()
-            ->select("t.title, t.effort, t.link, u.username AS username, r.area_id AS area_id")
+            ->select("t.title, t.effort, t.link, u.username AS username, r.area_id AS area_id, t.progress")
             ->from("tkTask t")
             ->leftJoin("t.root r")
-            ->where("t.level = 1")
+            ->where("t.level = 1 AND (t.archived != 1 OR t.archived IS NULL)")
             ->leftJoin("t.user u");
 
         if($request->getParameter("filter","all") == "me"){
@@ -103,6 +103,16 @@ class indexActions extends sfActions
             $this->forward404Unless($prevsib = $children[$pos]);
             $task->getNode()->moveAsNextSiblingOf($prevsib);
         }
+
+        $this->getResponse()->setContentType('text/json');
+        return $this->renderText('[]');
+    }
+
+    public function executeArchiveTaskJson(sfWebRequest $request){
+        $this->forward404Unless($task = Doctrine::getTable('tkTask')->find($request->getParameter('task_id')));
+
+        $task->archived = true;
+        $task->save();
 
         $this->getResponse()->setContentType('text/json');
         return $this->renderText('[]');

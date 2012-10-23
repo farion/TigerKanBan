@@ -1,4 +1,4 @@
-<div id="task-frm" title="Add New Task">
+<div id="task-frm" title="Task Form">
     <form>
         <fieldset>
             <?php echo $taskform->renderHiddenFields(); ?>
@@ -13,6 +13,11 @@
     Do you really want to signout?
 </div>
 
+<div id="dialog-archive" title="Archive?">
+    <p>Do you really want to archive this task? The task will disappear.</p>
+</div>
+
+
 <div id="toolbar">
     <button id="addtask-btn">Add Task</button>
     <button id="refresh-btn">Refresh</button>
@@ -23,3 +28,5 @@
     </div>
 </div>
 <div id="main"></div>
+<div class="clearer"></div>
+<div id="archivetarget">Drop tasks here to archive them<ul class="tasklist"></ul></div>

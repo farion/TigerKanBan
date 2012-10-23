@@ -8,11 +8,12 @@ class tkTaskForm extends BasetkTaskForm
             "title" => "Title",
             "link" => "Link",
             "effort" => "Effort in hours",
-            "sf_guard_user_id" => "Assigned to"
+            "sf_guard_user_id" => "Assigned to",
+            "progress" => "Progress in %"
         ));
 
         $this->disableCSRFProtection();
 
-        $this->useFields(array("title", "link", "effort", "sf_guard_user_id"));
+        $this->useFields(array("title", "link", "effort", "sf_guard_user_id","progress"));
     }
 }
