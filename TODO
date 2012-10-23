@@ -7,6 +7,7 @@ TODO 0.1
 - delete tasks
 - show effort on tasks
 - add modified behavior
+- team support
 
 TODO 0.2
 --------
@@ -24,4 +25,5 @@ TODO 0.4
 --------
 - gui for areamanagement
 - gui for usermanagement
+- gui for teams
 - ldap connection
