@@ -1,5 +1,12 @@
 $(document).ready(function() {
 
+  function triggerHeartBeat(){
+    setTimeout(function() {
+      loadTasks();
+      triggerHeartBeat();
+    }, 300000); //reload after 5Minutes
+  }
+
   function getTooltipOptions() {
     return {
       delay: 0,
@@ -237,7 +244,7 @@ $(document).ready(function() {
       $('button').tooltip(getTooltipOptions());
 
       loadTasks();
-
+      triggerHeartBeat();
 
     },
     error: function() {
