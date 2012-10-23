@@ -303,6 +303,7 @@ fieldset {
     background-color: #0073EA;
     color: #fff;
     height: 50px;
+    position:relative;
 }
 
 #header h1 {
@@ -350,6 +351,10 @@ fieldset {
     height: 50px;
 }
 
+.ui-widget-overlay {
+    position: fixed;
+}
+
 /* markdown */
 .ui-sortable li .comment li {
     margin: 0 0 0 18px;
@@ -386,4 +391,5 @@ fieldset {
     font-size: 9px;
     font-weight: bold;
 }
+
 

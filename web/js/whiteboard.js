@@ -201,7 +201,7 @@ $(document).ready(function() {
 
         $.each(data, function(index, task) {
           $('#areacol_' + task.area_id + '_' + task.lane_id + '  ul').append('<li class="ui-state-default' + (task.blocked ? ' blocked' : '') + '" id="task_' + task.id + '">' +
-            '<div class="text"><strong class="title' + ((task.comment!= "") ? ' withcomment' : '') + '">' + task.title + '</strong>' + (task.comment_formatted ? '<div class="comment">' + task.comment_formatted + '</div>' : '') +
+            '<div class="text"><strong class="title' + ((task.comment != "") ? ' withcomment' : '') + '">' + task.title + '</strong>' + (task.comment_formatted ? '<div class="comment">' + task.comment_formatted + '</div>' : '') +
             (task.link ? '<br><a href="' + task.link + '" target="_blank" title="' + task.link + '">Link</a>' : '') +
             '</div>' +
             '<div class="creator">' +
@@ -261,6 +261,15 @@ $(document).ready(function() {
           $('.areacol_' + value.id).height(height);
           $('#main').height($('#main').height() + $('.areacol_' + value.id).first().outerHeight(true));
         });
+
+
+        if($('#main').outerWidth(true) > $('body').outerWidth()) {
+          $('#header').width($('#main').outerWidth(true) + 20);
+          $('#content, #footer').width($('#main').outerWidth(true));
+        }else{
+          $('#header').width($('body').outerWidth());
+          $('#content, #footer').width($('body').outerWidth()-20);
+        }
 
 
         $('.tasklist a, .tasklist button').tooltip(getTooltipOptions());
