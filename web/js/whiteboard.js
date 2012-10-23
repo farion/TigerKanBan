@@ -201,7 +201,7 @@ $(document).ready(function() {
 
         $.each(data, function(index, task) {
           $('#areacol_' + task.area_id + '_' + task.lane_id + '  ul').append('<li class="ui-state-default' + (task.blocked ? ' blocked' : '') + '" id="task_' + task.id + '">' +
-            '<div class="text"><strong>' + task.title + '</strong>' + (task.comment ? '<br>' + task.comment : '') +
+            '<div class="text"><strong class="title' + ((task.comment!= "") ? ' withcomment' : '') + '">' + task.title + '</strong>' + (task.comment_formatted ? '<div class="comment">' + task.comment_formatted + '</div>' : '') +
             (task.link ? '<br><a href="' + task.link + '" target="_blank" title="' + task.link + '">Link</a>' : '') +
             '</div>' +
             '<div class="creator">' +
@@ -241,14 +241,14 @@ $(document).ready(function() {
           { id: 'x' }
         ], lanedata), function(index, value) {
           var height = 0;
-          $('.areacol_' + value.id + ' ul').each(function() {
+          $('.areacol_' + value.id + ' > ul').each(function() {
             $(this).height('auto');
             var myheight = $(this).height();
             if(myheight > height) {
               height = myheight;
             }
           });
-          $('.areacol_' + value.id + ' ul').height(height + ((value.id === 'x') ? 0 : 60));
+          $('.areacol_' + value.id + ' > ul').height(height + ((value.id === 'x') ? 0 : 60));
 
           height = 0;
           $('.areacol_' + value.id).each(function() {
@@ -283,11 +283,11 @@ $(document).ready(function() {
           url: baseurl + 'whiteboard/archiveTaskJson',
           method: 'POST',
           data: {
-            task_id: $($('#archivetarget ul').children()[0]).attr('id').substr(5)
+            task_id: $($('#archivetarget > ul').children()[0]).attr('id').substr(5)
           },
           success: function(data, textStatus, jqxhr) {
-            $('#archivetarget ul li').hide("drop", {}, 500, function() {
-              $('#archivetarget ul').html("");
+            $('#archivetarget > ul > li').hide("drop", {}, 500, function() {
+              $('#archivetarget > ul').html("");
             });
             $("#dialog-archive").dialog("close");
           },

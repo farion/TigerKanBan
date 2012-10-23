@@ -245,6 +245,14 @@ fieldset {
     margin: 20px 0px;
 }
 
+.ui-sortable li .title {
+    display: block;
+}
+
+.ui-sortable li .title.withcomment {
+    border-bottom: 1px solid #ddd;
+}
+
 .ui-sortable li .readydate {
     position: absolute;
     right: 2px;
@@ -338,3 +346,40 @@ fieldset {
 #archivetarget ul {
     height: 50px;
 }
+
+/* markdown */
+.ui-sortable li .comment li {
+    margin: 0 0 0 18px;
+    min-height: 5px;
+}
+
+.ui-sortable li .comment h1 {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.ui-sortable li .comment h2 {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.ui-sortable li .comment h3 {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.ui-sortable li .comment h4 {
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.ui-sortable li .comment h5 {
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.ui-sortable li .comment h6 {
+    font-size: 9px;
+    font-weight: bold;
+}
+

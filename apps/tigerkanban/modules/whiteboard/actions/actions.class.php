@@ -1,5 +1,7 @@
 <?php
 
+require_once(dirname(__FILE__).'/../../../../../lib/vendor/markdown/markdown.php');
+
 /**
  * whiteboard actions.
  *
@@ -91,6 +93,11 @@ class whiteboardActions extends sfActions
 
         $tasks = $q->orderBy("t.lft ASC")
         ->fetchArray();
+
+        foreach($tasks AS &$task){
+            $task['comment_formatted'] = Markdown($task['comment']);
+        }
+
 
         $this->getResponse()->setContentType('text/json');
         return $this->renderText(json_encode($tasks));
