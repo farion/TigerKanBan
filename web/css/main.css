@@ -262,3 +262,7 @@ fieldset {
     padding: 15px 10px 10px 10px;
     display: block;
 }
+
+.warning {
+    color: #FF2200;
+}

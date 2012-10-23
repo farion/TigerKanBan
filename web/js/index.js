@@ -95,10 +95,12 @@ $(document).ready(function() {
 
         $.each(data, function(index, task) {
           $('#areacol_' + task.area_id + ' ul').append('<li class="ui-state-default" id="task_' + task.id + '">' +
-            '<div class="text">' + task.title +
+            '<div class="text"><strong>' + task.title + '</strong>' +
             (task.link ? ' <a href="' + task.link + '" target="_blank" title="' + task.link + '">Link</a>' : '') +
-            (task.username ? '<span class="user">Assigned to: <strong>' + task.username + '</strong></span>' : '') +
-            '</div>' +
+            '<span class="user">' +
+            (task.username ? '@' + task.username + '' :  '@N/A') +
+            (task.effort ? ' | ' + task.effort + 'h' : '') +
+            '</span></div>' +
             '<button>Edit</button>' +
             '</li>');
         });
