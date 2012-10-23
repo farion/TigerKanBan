@@ -23,6 +23,16 @@ $(document).ready(function() {
     }
   }
 
+  function fixLayout() {
+    if($('#main').outerWidth(true) > $('body').outerWidth()) {
+      $('#header').width($('#main').outerWidth(true) + 20);
+      $('#content, #footer').width($('#main').outerWidth(true));
+    } else {
+      $('#header').width($('body').outerWidth());
+      $('#content, #footer').width($('body').outerWidth() - 20);
+    }
+  }
+
   function signout() {
     $("#dialog-signout").dialog("open");
   }
@@ -262,15 +272,7 @@ $(document).ready(function() {
           $('#main').height($('#main').height() + $('.areacol_' + value.id).first().outerHeight(true));
         });
 
-
-        if($('#main').outerWidth(true) > $('body').outerWidth()) {
-          $('#header').width($('#main').outerWidth(true) + 20);
-          $('#content, #footer').width($('#main').outerWidth(true));
-        }else{
-          $('#header').width($('body').outerWidth());
-          $('#content, #footer').width($('body').outerWidth()-20);
-        }
-
+        fixLayout();
 
         $('.tasklist a, .tasklist button').tooltip(getTooltipOptions());
 
@@ -450,6 +452,9 @@ $(document).ready(function() {
     }
   });
 
+  $(window).resize(function() {
+    fixLayout();
+  });
 
   loadAreas();
   triggerHeartBeat();
