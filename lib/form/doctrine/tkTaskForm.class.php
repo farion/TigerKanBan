@@ -15,7 +15,7 @@ class tkTaskForm extends BasetkTaskForm
             "link" => "Link",
             "effort" => "Effort in hours",
             "sf_guard_user_id" => "Assigned to",
-            "comment" => "Note",
+            "comment" => "Note (Markdown is enabled)",
             "blocked" => "Is blocked?"
         ));
 
