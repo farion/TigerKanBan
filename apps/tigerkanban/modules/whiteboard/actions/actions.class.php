@@ -79,7 +79,10 @@ class whiteboardActions extends sfActions
                                         FROM tk_task t
                                         LEFT JOIN tk_lane l
                                         ON l.id = t.lane_id
-                                        WHERE t.lane_id = ".$lane['id']." AND t.level = 0 AND sf_guard_group_id = ".$team_id."
+                                        LEFT JOIN tk_area a
+                                        ON a.id = t.area_id
+                                        WHERE t.lane_id = ".$lane['id']." AND t.level = 0 AND
+                                        l.sf_guard_group_id = ".$team_id." AND a.sf_guard_group_id = ".$team_id." AND a.wip IS NOT NULL
                                     ) r
                                     ON t.root_id = r.root_id
                                     WHERE t.level = 1  AND r.root_id IS NOT NULL AND (t.archived IS NULL OR t.archived = 0)"
