@@ -244,7 +244,7 @@ fieldset {
 }
 
 .ui-sortable li .text {
-    margin: 20px 0px;
+    margin: 0px 0px 20px 0px;
 }
 
 .ui-sortable li .title {
@@ -356,39 +356,39 @@ fieldset {
 }
 
 /* markdown */
-.ui-sortable li .comment li {
+.comment li {
     margin: 0 0 0 18px;
     min-height: 5px;
     width: auto;
 }
 
-.ui-sortable li .comment h1 {
-    font-size: 14px;
+.comment h1 {
+    font-size: 140%;
     font-weight: bold;
 }
 
-.ui-sortable li .comment h2 {
-    font-size: 13px;
+.comment h2 {
+    font-size: 130%;
     font-weight: bold;
 }
 
-.ui-sortable li .comment h3 {
-    font-size: 12px;
+.comment h3 {
+    font-size: 120%;
     font-weight: bold;
 }
 
-.ui-sortable li .comment h4 {
-    font-size: 11px;
+.comment h4 {
+    font-size: 110%;
     font-weight: bold;
 }
 
-.ui-sortable li .comment h5 {
-    font-size: 10px;
+.comment h5 {
+    font-size: 105%;
     font-weight: bold;
 }
 
-.ui-sortable li .comment h6 {
-    font-size: 9px;
+.comment h6 {
+    font-size: 100%;
     font-weight: bold;
 }
 
@@ -404,4 +404,17 @@ span.overfull {
 
 .areacol.wipfull {
     background-color: #FFF6F6;
+}
+
+#td_comment {
+    border-top: 1px solid #666;
+    padding-top: 5px;
+    margin-top: 5px;
+}
+
+#task-dialog > h2 {
+    font-weight: bold;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #666;
 }

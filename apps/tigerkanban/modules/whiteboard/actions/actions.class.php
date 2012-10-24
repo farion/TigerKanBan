@@ -166,7 +166,9 @@ class whiteboardActions extends sfActions
         } else {
             $children = $root->getNode()->getChildren();
             $this->forward404Unless($prevsib = $children[$pos]);
-            $task->getNode()->moveAsNextSiblingOf($prevsib);
+
+            if($prevsib->getId() != $task->getId())
+                $task->getNode()->moveAsNextSiblingOf($prevsib);
         }
 
         $this->getResponse()->setContentType('text/json');

@@ -48,6 +48,31 @@ $(document).ready(function() {
     $("select").selectmenu('refresh');
   }
 
+  function showTask(task_id) {
+    var task = null;
+    $.each(taskdata, function(index, mytask) {
+      if(mytask.id == task_id) {
+        task = mytask;
+        return false;
+      }
+    });
+    if(!task) {
+      alert("Something went wrong. Sorry!");
+    }
+
+    $('#td_title').html(task.title);
+    $('#td_comment').html(task.comment_formatted);
+    $('#td_username').html(task.username);
+    $('#td_creator').html(task.creatorname);
+    $('#td_created_at').html(task.created_at);
+    $('#td_effort').html(task.effort + "h");
+    $('#td_link').html(task.link);
+    $('#td_link').attr("href",task.link);
+    $('#td_id').val(task.id);
+    $("#task-dialog").dialog('open');
+
+  }
+
   function editTask(task_id) {
     var task = null;
     $.each(taskdata, function(index, mytask) {
@@ -212,20 +237,10 @@ $(document).ready(function() {
 
         $.each(data, function(index, task) {
           $('#areacol_' + task.area_id + '_' + task.lane_id + ' > ul').append('<li class="ui-state-default' + (task.blocked ? ' blocked' : '') + '" id="task_' + task.id + '">' +
-            '<div class="text"><strong class="title' + ((task.comment != "") ? ' withcomment' : '') + '">' + task.title + '</strong>' + (task.comment_formatted ? '<div class="comment">' + task.comment_formatted + '</div>' : '') +
-            (task.link ? '<br><a href="' + task.link + '" target="_blank" title="' + task.link + '">Link</a>' : '') +
-            '</div>' +
-            '<div class="creator">' +
-            (task.creatorname ? task.creatorname : '') +
+            '<div class="text"><strong class="title">' + task.title + '</strong>' +
             '</div>' +
             '<div class="user">' +
-            (task.username ? '<strong>' + task.username + '</strong>' : '') + (task.effort ? ' | ' + task.effort + 'h' : '') +
-            '</div>' +
-            '<div class="createddate">' +
-            (task.created_at ? task.created_at : '') +
-            '</div>' +
-            '<div class="readydate">' +
-            (task.readydate ? task.readydate : '') +
+            (task.effort ? task.effort + 'h' : '') + " " + (task.username ? '<strong>' + task.username + '</strong>' : '') +
             '</div>' +
             '</li>');
         });
@@ -278,11 +293,28 @@ $(document).ready(function() {
         $('.tasklist a, .tasklist button').tooltip(getTooltipOptions());
 
         $('.tasklist li').dblclick(function(event) {
-          editTask($(this).attr('id').substr(5));
+          showTask($(this).attr('id').substr(5));
         });
       }
     });
   }
+
+  $("#task-dialog").dialog({
+    resizable: false,
+    height: 400,
+    width: 500,
+    modal: true,
+    autoOpen: false,
+    buttons: {
+      "Edit this task": function() {
+        $(this).dialog("close");
+        editTask($('#td_id').val());
+      },
+      "OK": function() {
+        $(this).dialog("close");
+      }
+    }
+  });
 
   $("#dialog-archive").dialog({
     resizable: false,

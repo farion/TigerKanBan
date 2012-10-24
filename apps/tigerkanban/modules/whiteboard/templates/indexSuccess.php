@@ -8,6 +8,16 @@
     </form>
 </div>
 
+<div id="task-dialog" title="Task">
+    <h2 id="td_title"></h2>
+    <input type="hidden" id="td_id">
+    <strong>Assigned to:</strong> <span id="td_username"></span><br>
+    <strong>Created from:</strong> <span id="td_creator"></span> (<span id="td_created_at"></span>)<br>
+    <strong>Effort:</strong> <span id="td_effort"></span><br>
+    <strong>Link:</strong> <a href="" id="td_link" target="_blank"></a><br>
+    <div id="td_comment" class="comment"></div>
+</div>
+
 
 <div id="dialog-signout" title="Signout?">
     Do you really want to signout?
