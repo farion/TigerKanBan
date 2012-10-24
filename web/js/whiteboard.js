@@ -41,6 +41,7 @@ $(document).ready(function() {
     var tips = $(".validateTips");
     tips.html("Please enter at least a title.");
     $("#task-frm").dialog("open");
+    $('#tk_task_id').val(0);
     $('#tk_task_blocked').val(0);
     $('#tk_task_sf_guard_user_id').val('');
     $("select").selectmenu();
