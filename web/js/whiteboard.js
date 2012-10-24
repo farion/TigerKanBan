@@ -237,8 +237,7 @@ $(document).ready(function() {
 
         $.each(data, function(index, task) {
           $('#areacol_' + task.area_id + '_' + task.lane_id + ' > ul').append('<li class="ui-state-default' + (task.blocked ? ' blocked' : '') + '" id="task_' + task.id + '">' +
-            '<div class="text"><strong class="title">' + task.title + '</strong>' +
-            '</div>' +
+            '<div class="text">' + task.title + '</div>' +
             '<div class="user">' +
             (task.effort ? task.effort + 'h' : '') + " " + (task.username ? '<strong>' + task.username + '</strong>' : '') +
             '</div>' +
