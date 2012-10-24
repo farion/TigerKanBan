@@ -158,21 +158,21 @@ $(document).ready(function() {
         lanedata = data.lanes;
 
         $.each(data.areas, function(index, area) {
-          $('#main').append('<div class="areacol coldesc areacol_x' +
+          $('#main').append('<div class="areacol coldesc areacol_x' +  ((area.wip && area.load > area.wip)?' wipfull':'') +
             ((area.area_type === "2") ? ' finish_right' : (area.area_type === "1") ? ' finish_left' : '') + '"' +
             ' id="areacol_' + area.id + '">' +
             '<div class="areacoltitle">' +
             '<strong>' + ((area.area_type != "2") ? area.name : '&nbsp;') + '</strong>' +
             ((area.area_type === "2") ? 'Finished' : ((area.area_type === "1") ? 'Started' : '')) +
-            (area.wip ? ' WIP: ' + area.wip : '') +
+            (area.wip ? ' <span' + ((area.load > area.wip)?' class="overfull"':((area.load == area.wip)?' class="full"':''))+'>WIP: ' + area.load + '/' + area.wip + '</span>': '') +
             '</div></div>');
         });
 
         $.each(data.lanes, function(lindex, lane) {
-          $('#main').append('<div class="areacol rowdesc areacol_' + lane.id + '" id="lanecol_' + lane.id + '">' +
-            '<div class="areacoltitle"><strong>' + lane.name + '</strong></div></div>');
+          $('#main').append('<div class="areacol rowdesc areacol_' + lane.id + ((lane.wip && lane.load > lane.wip)?' wipfull':'') + '" id="lanecol_' + lane.id + '">' +
+            '<div class="areacoltitle"><strong>' + lane.name + '</strong>' + (lane.wip ? ' <span' + ((lane.load > lane.wip)?' class="overfull"':((lane.load == lane.wip)?' class="full"':''))+'>WIP: ' + lane.load + '/' + lane.wip + '</span>' : '') + '</div></div>');
           $.each(data.areas, function(aindex, area) {
-            $('#main').append('<div class="areacol areacol_' + lane.id +
+            $('#main').append('<div class="areacol areacol_' + lane.id + (((lane.wip && lane.load > lane.wip) || (area.wip && area.load > area.wip))?' wipfull':'') +
               ((area.area_type === "2") ? ' finish_right' : (area.area_type === "1") ? ' finish_left' : '') +
               '" id="areacol_' + area.id + '_' + lane.id + '">' +
               '<ul class="tasklist"></ul></div>');

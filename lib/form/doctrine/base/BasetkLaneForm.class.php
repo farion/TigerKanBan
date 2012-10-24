@@ -19,6 +19,7 @@ abstract class BasetkLaneForm extends BaseFormDoctrine
       'name'              => new sfWidgetFormInputText(),
       'pos'               => new sfWidgetFormInputText(),
       'sf_guard_group_id' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('team'), 'add_empty' => true)),
+      'wip'               => new sfWidgetFormInputText(),
       'created_at'        => new sfWidgetFormDateTime(),
       'updated_at'        => new sfWidgetFormDateTime(),
     ));
@@ -28,6 +29,7 @@ abstract class BasetkLaneForm extends BaseFormDoctrine
       'name'              => new sfValidatorString(array('max_length' => 255, 'required' => false)),
       'pos'               => new sfValidatorInteger(array('required' => false)),
       'sf_guard_group_id' => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('team'), 'required' => false)),
+      'wip'               => new sfValidatorInteger(array('required' => false)),
       'created_at'        => new sfValidatorDateTime(),
       'updated_at'        => new sfValidatorDateTime(),
     ));

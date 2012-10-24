@@ -1,6 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__).'/../../../../../lib/vendor/markdown/markdown.php');
+require_once(dirname(__FILE__) . '/../../../../../lib/vendor/markdown/markdown.php');
 
 /**
  * whiteboard actions.
@@ -19,11 +19,12 @@ class whiteboardActions extends sfActions
      */
     public function executeIndex(sfWebRequest $request)
     {
-        if(!Doctrine_Query::create()
+        if (!Doctrine_Query::create()
             ->from('sfGuardGroup g')
             ->leftJoin("g.users u")
-            ->where("u.id = ?",sfContext::getInstance()->getUser()->getGuardUser()->getId())
-            ->count()){
+            ->where("u.id = ?", sfContext::getInstance()->getUser()->getGuardUser()->getId())
+            ->count()
+        ) {
             return "NoGroup";
         }
 
@@ -33,17 +34,62 @@ class whiteboardActions extends sfActions
 
     public function executeGetAreasJson(sfWebRequest $request)
     {
+        $team_id = $request->getParameter("team_id",null);
+        $this->forward404Unless(is_numeric($team_id));
+
+
         $areas = Doctrine::getTable('tkArea')
             ->createQuery()
-            ->where("sf_guard_group_id = ?",$request->getParameter("team_id"))
+            ->where("sf_guard_group_id = ?", $request->getParameter("team_id"))
             ->orderBy('pos ASC')
             ->fetchArray();
 
         $lanes = Doctrine::getTable('tkLane')
             ->createQuery()
-            ->where("sf_guard_group_id = ?",$request->getParameter("team_id"))
+            ->where("sf_guard_group_id = ?", $request->getParameter("team_id"))
             ->orderBy('pos ASC')
             ->fetchArray();
+
+
+        foreach($areas AS &$area){
+            $q = Doctrine_Manager::getInstance()->getCurrentConnection();
+            $result = $q->execute("SELECT COUNT(*) AS cload
+                                    FROM tk_task t
+                                    LEFT JOIN (
+                                        SELECT root_id
+                                        FROM tk_task t
+                                        LEFT JOIN tk_area a
+                                        ON a.id = t.area_id
+                                        WHERE t.area_id = ".$area['id']." AND t.level = 0 AND sf_guard_group_id = ".$team_id."
+                                    ) r
+                                    ON t.root_id = r.root_id
+                                    WHERE t.level = 1  AND r.root_id IS NOT NULL AND (t.archived IS NULL OR t.archived = 0)"
+            );
+
+            $row = $result->fetch();
+            $area['load'] = $row['cload'];
+        }
+
+        foreach($lanes AS &$lane){
+            $q = Doctrine_Manager::getInstance()->getCurrentConnection();
+            $result = $q->execute("SELECT COUNT(*) AS cload
+                                    FROM tk_task t
+                                    LEFT JOIN (
+                                        SELECT root_id
+                                        FROM tk_task t
+                                        LEFT JOIN tk_lane l
+                                        ON l.id = t.lane_id
+                                        WHERE t.lane_id = ".$lane['id']." AND t.level = 0 AND sf_guard_group_id = ".$team_id."
+                                    ) r
+                                    ON t.root_id = r.root_id
+                                    WHERE t.level = 1  AND r.root_id IS NOT NULL AND (t.archived IS NULL OR t.archived = 0)"
+            );
+
+
+            $row = $result->fetch();
+            $lane['load'] = $row['cload'];
+        }
+
 
         $this->getResponse()->setContentType('text/json');
         return $this->renderText(json_encode(array('areas' => $areas, 'lanes' => $lanes)));
@@ -62,7 +108,7 @@ class whiteboardActions extends sfActions
 
             $taskform->save();
 
-            if(!$task){
+            if (!$task) {
                 $task = $taskform->getObject();
                 $root = Doctrine::getTable('tkTask')->findRootByTeamId($request->getParameter('team_id'));
                 $task->getNode()->insertAsLastChildOf($root);
@@ -87,14 +133,14 @@ class whiteboardActions extends sfActions
             ->leftJoin("t.user u")
             ->leftJoin("t.creator c");
 
-        if($request->getParameter("filter","all") == "me"){
-            $q->andWhere("u.id = ?",$this->getUser()->getGuardUser()->getId());
+        if ($request->getParameter("filter", "all") == "me") {
+            $q->andWhere("u.id = ?", $this->getUser()->getGuardUser()->getId());
         }
 
         $tasks = $q->orderBy("t.lft ASC")
-        ->fetchArray();
+            ->fetchArray();
 
-        foreach($tasks AS &$task){
+        foreach ($tasks AS &$task) {
             $task['comment_formatted'] = Markdown($task['comment']);
         }
 
@@ -107,7 +153,7 @@ class whiteboardActions extends sfActions
     {
         $this->forward404Unless($area = Doctrine::getTable('tkArea')->find($request->getParameter('area_id')));
         $this->forward404Unless($lane = Doctrine::getTable('tkLane')->find($request->getParameter('lane_id')));
-        $this->forward404Unless($root = Doctrine::getTable('tkTask')->findRootByAreaAndLane($area,$lane));
+        $this->forward404Unless($root = Doctrine::getTable('tkTask')->findRootByAreaAndLane($area, $lane));
         $this->forward404Unless($task = Doctrine::getTable('tkTask')->find($request->getParameter('task_id')));
 
         $pos = $request->getParameter("task_pos") - 1;
@@ -124,7 +170,8 @@ class whiteboardActions extends sfActions
         return $this->renderText('[]');
     }
 
-    public function executeArchiveTaskJson(sfWebRequest $request){
+    public function executeArchiveTaskJson(sfWebRequest $request)
+    {
         $this->forward404Unless($task = Doctrine::getTable('tkTask')->find($request->getParameter('task_id')));
 
         $task->archived = true;

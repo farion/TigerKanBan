@@ -8,17 +8,20 @@
  * @property string $name
  * @property integer $pos
  * @property integer $sf_guard_group_id
+ * @property integer $wip
  * @property sfGuardGroup $team
  * @property Doctrine_Collection $tkTask
  * 
  * @method string              getName()              Returns the current record's "name" value
  * @method integer             getPos()               Returns the current record's "pos" value
  * @method integer             getSfGuardGroupId()    Returns the current record's "sf_guard_group_id" value
+ * @method integer             getWip()               Returns the current record's "wip" value
  * @method sfGuardGroup        getTeam()              Returns the current record's "team" value
  * @method Doctrine_Collection getTkTask()            Returns the current record's "tkTask" collection
  * @method tkLane              setName()              Sets the current record's "name" value
  * @method tkLane              setPos()               Sets the current record's "pos" value
  * @method tkLane              setSfGuardGroupId()    Sets the current record's "sf_guard_group_id" value
+ * @method tkLane              setWip()               Sets the current record's "wip" value
  * @method tkLane              setTeam()              Sets the current record's "team" value
  * @method tkLane              setTkTask()            Sets the current record's "tkTask" collection
  * 
@@ -42,6 +45,9 @@ abstract class BasetkLane extends sfDoctrineRecord
         $this->hasColumn('sf_guard_group_id', 'integer', 4, array(
              'type' => 'integer',
              'length' => 4,
+             ));
+        $this->hasColumn('wip', 'integer', null, array(
+             'type' => 'integer',
              ));
     }
 

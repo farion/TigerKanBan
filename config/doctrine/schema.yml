@@ -5,6 +5,7 @@ tkLane:
     name: string(255)
     pos: integer
     sf_guard_group_id: integer(4);
+    wip: integer
   relations:
     team:
       class: sfGuardGroup
