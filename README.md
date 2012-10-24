@@ -1,6 +1,20 @@
 #TigerKanBan
 A simple webbased KanBan Application.
 
+##Features
+- Multiple Teams.
+- Columns and lanes.
+- Support for start/finish subcolumns.
+- WIP per column and lane.
+- WIP warnings.
+- Tasks can be assigned to users.
+
+##Requirements
+- Webserver (e.g. apache)
+- PHP 5.2.4
+- MySQL 5.X
+- Shell access
+
 ##Installation
 - Check out to a random directory e.g. "cd /opt && git clone https://github.com/farion/TigerKanBan.git"
 - Link web folder somewhere to your webserver e.g. "ln -s /opt/TigerKanBan/web /var/www/tigerkanban"
