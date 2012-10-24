@@ -210,7 +210,7 @@ $(document).ready(function() {
         taskdata = data;
 
         $.each(data, function(index, task) {
-          $('#areacol_' + task.area_id + '_' + task.lane_id + '  ul').append('<li class="ui-state-default' + (task.blocked ? ' blocked' : '') + '" id="task_' + task.id + '">' +
+          $('#areacol_' + task.area_id + '_' + task.lane_id + ' > ul').append('<li class="ui-state-default' + (task.blocked ? ' blocked' : '') + '" id="task_' + task.id + '">' +
             '<div class="text"><strong class="title' + ((task.comment != "") ? ' withcomment' : '') + '">' + task.title + '</strong>' + (task.comment_formatted ? '<div class="comment">' + task.comment_formatted + '</div>' : '') +
             (task.link ? '<br><a href="' + task.link + '" target="_blank" title="' + task.link + '">Link</a>' : '') +
             '</div>' +
@@ -410,7 +410,12 @@ $(document).ready(function() {
     ajaxStart: function() {
       $(this).addClass("loading");
     },
-    ajaxStop: function() {
+    ajaxComplete: function(e,xhr,opt) {
+      if(xhr.status == 401){
+        document.location.reload();
+      }
+    },
+    ajaxStop: function(e) {
       $(this).removeClass("loading");
     }
   });
